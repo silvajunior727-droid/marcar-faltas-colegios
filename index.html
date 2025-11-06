@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Presença Escolar 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos base copiados e simplificados */
+        :root {
+            --c-primary: #4a90e2;
+            --c-secondary: #50e3c2;
+            --c-success: #28a745;
+            --c-bg: #f7f9fc;
+            --c-card: #ffffff;
+            --c-text: #333;
+            --c-text-gray: #777;
+            --c-border: #eee;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --c-danger-text: #721c24;
+            --c-danger-bg: #dc3545;
+            --c-warning-bg: #f0ad4e;
+            --c-info-bg: #17a2b8; 
+            --c-input-readonly-bg: #eee;
+        }
+
+        /* VARIAVEIS PARA MODO ESCURO */
+        html[data-theme="dark"] {
+            --c-bg: #1e1e1e;
+            --c-card: #2d2d2d;
+            --c-text: #f0f0f0;
+            --c-text-gray: #bbb;
+            --c-border: #444;
+            --shadow: 0 4px 15px rgba(0,0,0,0.4);
+            --c-primary: #8ab4f8; 
+            --c-secondary: #50e3c2; 
+            --c-danger-text: #ff9999;
+            --c-danger-bg: #cc3333;
+            --c-warning-bg: #ffcc66;
+            --c-info-bg: #4dd0e1;
+            --c-input-readonly-bg: #3c3c3c; 
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container { max-width: 700px; margin: auto; }
+        .card { 
+            background-color: var(--c-card); 
+            border-radius: 12px; 
+            padding: 25px; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 25px;
+            transition: background-color 0.3s, box-shadow 0.3s; 
+        }
+        h1 { color: var(--c-primary); text-align: center; margin-bottom: 30px; font-size: 2em; }
+        h2 { 
+            margin-top: 0; 
+            color: var(--c-text); 
+            border-bottom: 2px solid var(--c-primary); 
+            padding-bottom: 10px; 
+            display: inline-block; 
+        }
+
+        /* Formulário e Combos */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-field { display: flex; flex-direction: column; }
+        label { margin-bottom: 8px; font-weight: 600; font-size: 0.9em; }
+        input[type="text"], input[type="tel"], select { 
+            padding: 12px; 
+            border: 1px solid var(--c-border); 
+            border-radius: 8px; 
+            font-size: 1em; 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        /* ESTILO PARA INPUTS READ-ONLY E TURMAS DESABILITADAS */
+        input:read-only { 
+            background-color: var(--c-input-readonly-bg); 
+            color: var(--c-text);
+        }
+        .turma-disabled { 
+            background-color: var(--c-input-readonly-bg); 
+            color: var(--c-text-gray); 
+            cursor: not-allowed; 
+        }
+
+
+        /* Estilo para agrupar Horário e Botão de Salvar */
+        .horario-group { 
+            display: flex; 
+            gap: 10px; 
+            align-items: flex-end;
+        }
+        .horario-group input { 
+            flex-grow: 1; 
+            margin-bottom: 0;
+        }
+        .horario-group button {
+            padding: 12px 15px;
+            font-size: 0.9em;
+            background-color: var(--c-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+        .horario-group button:hover {
+            background-color: #3a75b8;
+        }
+        
+        /* Tabela de Presença */
+        .table-wrapper {
+            /* Removendo overflow-x auto aqui, pois vamos forçar a compactação. */
+            overflow-x: auto; 
+            margin-top: 20px;
+        }
+        table { 
+            width: 100%; 
+            /* Reduzindo min-width para o máximo que a tela do celular pode suportar */
+            min-width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
+        }
+        th, td { 
+            /* Padding padrão do desktop */
+            padding: 12px 15px; 
+            border-bottom: 1px solid var(--c-border); 
+            text-align: left;
+            background-color: var(--c-card);
+            transition: background-color 0.3s; 
+        }
+        /* Cor do texto do cabeçalho da tabela para preto/dark gray */
+        th { 
+            background-color: var(--c-primary); 
+            color: #333; /* Forçado para cor escura */
+            font-weight: 700; 
+            text-align: center; 
+        }
+        .radio-cell { text-align: center; }
+
+        /* Estilos de Botões */
+        .button-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-primary { 
+            background-color: var(--c-primary); color: white; padding: 10px; 
+            border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover { background-color: #3a75b8; }
+        .btn-full-width {
+            width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;
+        }
+        /* Cor do texto dos botões de ação para preto/dark gray */
+        .btn-warning { 
+            background-color: var(--c-warning-bg); 
+            color: #333; /* Forçado para preto */
+        }
+        .btn-warning:hover { background-color: #e69500; }
+        /* Cor do texto do botão de PDF para preto/dark gray */
+        .btn-info { 
+            background-color: var(--c-info-bg); 
+            color: #333; /* Forçado para preto */
+        }
+        .btn-info:hover { background-color: #138496; }
+        /* Cor do texto do botão de Envio/Limpar Histórico */
+        #send-full-report-btn { color: #333; }
+        #clear-full-report-btn { color: #333; }
+        
+        /* NOVO ID DO BOTÃO DE ROLAGEM */
+        #scroll-to-top-btn {
+            background-color: #6c757d; /* Cor neutra/cinza para rolagem */
+            color: black !important;
+        }
+        #scroll-to-top-btn:hover { background-color: #5a6268; }
+        
+        /* Área de Status e Configuração */
+        #presenca-status { margin-top: 15px; color: var(--c-danger-text); text-align: center; font-weight: 600; }
+
+        /* Estilos específicos para botões de utilidade no topo */
+        .utility-buttons {
+            display: flex;
+            gap: 10px;
+            float: right;
+            margin-top: -10px;
+        }
+        .utility-buttons button {
+            /* AUMENTADO EM ~30% */
+            font-size: 1.2em; 
+            padding: 10px 15px; /* Aumentado o padding */
+            min-width: 80px; 
+            box-sizing: border-box;
+        }
+        
+        /* Mudar a cor do botão de modo noturno para algo neutro */
+        #toggle-dark-mode {
+            background-color: #6c757d; 
+            color: white; 
+        }
+
+        /* AJUSTES PARA DISPOSITIVOS MÓVEIS */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .card {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.5em;
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+            h2 {
+                margin-top: 15px; 
+            }
+            .form-grid {
+                grid-template-columns: 1fr; 
+                /* Reduz o espaçamento dos campos do formulário para economizar espaço vertical */
+                gap: 10px; 
+            }
+            .form-field input[type="text"], .form-field select {
+                /* Reduz o padding dos inputs principais */
+                padding: 10px;
+            }
+            .utility-buttons {
+                margin-top: 0;
+                float: none;
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 10px; 
+            }
+            .utility-buttons button {
+                flex-grow: 1;
+                min-width: auto;
+            }
+            
+            /* ##### OTIMIZAÇÃO CRÍTICA PARA A TABELA EM CELULARES ##### */
+            .table-wrapper {
+                /* Força a remoção de rolagem horizontal desnecessária se os ajustes funcionarem */
+                overflow-x: hidden; 
+            }
+            table {
+                /* Força a largura total da tela */
+                width: 100%;
+            }
+            th, td { 
+                /* Reduz drasticamente o padding horizontal para caber o conteúdo */
+                padding: 8px 5px; 
+                font-size: 0.8em; /* Reduz o tamanho da fonte */
+                white-space: normal; /* Permite quebras de linha para nomes longos */
+            }
+            th:nth-child(1), td:nth-child(1) {
+                /* Dá mais espaço para o nome do aluno */
+                width: 55%; 
+                font-size: 0.85em;
+            }
+            th:nth-child(2), td:nth-child(2),
+            th:nth-child(3), td:nth-child(3) {
+                /* Espaço mínimo para os radio buttons */
+                width: 22.5%; 
+                padding: 8px 2px;
+            }
+            .radio-cell input {
+                /* Aumenta o tamanho do radio button para facilitar o toque */
+                transform: scale(1.3);
+            }
+            /* ##### FIM DA OTIMIZAÇÃO CRÍTICA PARA A TABELA ##### */
+        }
+
+
+        /* ESTILOS DE IMPRESSÃO (MELHORADOS) */
+        @media print {
+            /* 1. Ocultar TUDO por padrão */
+            body * {
+                visibility: hidden !important;
+            }
+            
+            /* 2. Mostrar APENAS a nova estrutura de relatório */
+            body > .container,
+            #tabela-impressao-temp,
+            #tabela-impressao-temp * {
+                visibility: visible !important;
+                display: block !important;
+                width: 100%;
+                max-width: none;
+                /* Adiciona cor de fundo branca para garantir legibilidade */
+                background-color: white !important;
+            }
+            
+            /* 3. Estilizar a tabela temporária */
+            #tabela-impressao-temp {
+                margin: 0;
+                padding: 20px; 
+                position: absolute;
+                left: 0;
+                top: 0;
+                border-collapse: collapse;
+                color: #000;
+            }
+            .print-table-content {
+                margin-top: 5px; 
+                margin-bottom: 20px; /* Adiciona mais espaço abaixo da tabela */
+            }
+
+            /* Estilo dos cabeçalhos da tabela */
+            .print-table-content th {
+                background-color: #f0f0f0 !important; 
+                color: #000;
+                font-weight: bold;
+                border: 1px solid #000 !important; 
+                padding: 8px 12px; /* Aumenta um pouco o padding */
+                text-align: left;
+            }
+            /* Estilo das células do corpo da tabela */
+            .print-table-content td {
+                border: 1px solid #ccc; 
+                border-top: none;
+                border-bottom: none;
+                padding: 6px 12px; /* Aumenta o padding vertical e horizontal */
+                background-color: #fff !important; 
+            }
+            /* Garante borda inferior no último item */
+            .print-table-content tr:last-child td {
+                border-bottom: 1px solid #000 !important;
+            }
+
+            /* 4. Estilizar cabeçalhos do Relatório */
+            #tabela-impressao-temp h1 { 
+                font-size: 1.8em; 
+                border-bottom: 3px solid #000; 
+                padding-bottom: 8px; 
+                margin-bottom: 5px; 
+                color: #000 !important;
+                text-align: center;
+            }
+            #tabela-impressao-temp h2 { 
+                font-size: 1.1em; 
+                padding: 0; 
+                margin-bottom: 25px; 
+                text-align: center;
+                font-weight: normal;
+                border-bottom: 1px solid #999; 
+                padding-bottom: 5px;
+            }
+            /* Estilo do título do bloco (Data - Colégio/Turma) */
+            #tabela-impressao-temp h3 {
+                font-size: 1.2em;
+                margin-top: 25px;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #4a90e2 !important; /* Usando a cor primária diretamente */
+                border-bottom: 1px dashed #ccc; 
+                padding-bottom: 3px;
+                
+                /* MELHORIA PRINCIPAL: Evita que o cabeçalho do bloco fique na última linha da página */
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Sistema de Registro de Presença 2025</h1>
+        
+        <div class="card">
+            <div class="utility-buttons">
+                <button id="toggle-dark-mode" class="btn-primary">
+                    🌙
+                </button>
+                <button id="toggle-settings-btn" class="btn-primary">
+                    ⚙️
+                </button>
+            </div>
+            <h2>Configurações</h2>
+            
+            <div id="settings-panel" style="display: none;">
+                <h3>📞 Número de WhatsApp:</h3>
+                <div class="form-grid">
+                    <div class="form-field" style="grid-column: 1 / -1;">
+                        <input type="tel" id="setting-whatsapp" placeholder="Ex: 5511987654321 (apenas números)">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" id="save-settings-btn" style="flex-grow: 2;">Salvar Número</button>
+                </div>
+
+                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">⏰ Configurar Horários</h3>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="setting-colegio">Colégio:</label>
+                        <select id="setting-colegio">
+                            <option value="">-- Escolha --</option>
+                            <option value="Colégio Objetivo">OBJETIVO</option>
+                            <option value="Colégio GP">GP</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="setting-turma">Turma:</label>
+                        <select id="setting-turma" class="turma-disabled" disabled>
+                            <option value="">Selecione Colégio</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="grid-column: 1 / -1;">
+                        <label for="setting-horario">Horário da Aula:</label>
+                        <div class="horario-group">
+                            <input type="text" id="setting-horario" placeholder="Ex: 14h00 às 15h30">
+                            <button type="button" id="setting-save-horario-btn" class="btn-primary">Salvar Horário</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="presenca-card">
+            <h2>Lançamento Diário</h2>
+            <form id="formPresenca">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="presenca-colegio">Colégio:</label>
+                        <select id="presenca-colegio" required>
+                            <option value="">-- Mudar Colégio --</option>
+                            <option value="Colégio Objetivo" selected>OBJETIVO</option>
+                            <option value="Colégio GP">GP</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="presenca-turma">Turma:</label>
+                        <select id="presenca-turma" class="turma-disabled" disabled required>
+                            <option value="">Selecione um Colégio primeiro</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="presenca-data">Data (Ano 2025):</label>
+                        <input type="text" id="presenca-data" required readonly>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="presenca-horario">Horário:</label>
+                        <input type="text" id="presenca-horario" readonly>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="table-wrapper"> <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do Aluno</th>
+                                <th>Presente</th>
+                                <th>Faltou</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaAlunos">
+                            <tr><td colspan="3" style="text-align: center;">Selecione um Colégio e uma Turma para carregar a lista de alunos.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral de Faltas</h3>
+                
+                <button type="button" id="save-faltas-btn" class="btn-primary btn-warning btn-full-width">
+                    💾 SALVAR FALTAS!
+                </button>
+
+                <button type="button" id="save-pdf-btn" class="btn-primary btn-info btn-full-width">
+                    📄 IMPRIMIR RELATÓRIO!
+                </button>
+                
+                <button type="button" class="btn-primary" id="send-full-report-btn" style="background-color: var(--c-secondary); color: #333; width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;">
+                    💬 ENVIAR RELATÓRIO!
+                </button>
+
+                <button type="button" class="btn-primary" id="clear-full-report-btn" style="background-color: var(--c-danger-bg); color: #333; width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;">
+                    🗑️ LIMPAR HISTÓRICO!
+                </button>
+                
+                <button type="button" class="btn-primary btn-full-width" id="scroll-to-top-btn">
+                    ⬆️ VOLTAR AO TOPO!
+                </button>
+                
+                <p id="presenca-status"></p>
+            </form>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Pergunta ao usuário se deseja apagar o histórico ao abrir a página
+  setTimeout(function() {
+    if (confirm("Deseja apagar todo o histórico do relatório agora? Isso removerá permanentemente todos os registros.")) {
+      localStorage.removeItem('registroDeFaltas');
+      alert('O histórico foi apagado com sucesso!');
+    }
+  }, 100);
+
+  // ...restante do seu código permanece igual
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ==============================================================================
+    // 0. CONFIGURAÇÃO DE MODO NOTURNO
+    // ==============================================================================
+    const rootHtml = document.documentElement;
+    const darkModeBtn = document.getElementById('toggle-dark-mode');
+    
+    // Tenta carregar a preferência do usuário (padrão é 'light')
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    rootHtml.setAttribute('data-theme', savedTheme);
+    
+    const toggleDarkMode = () => {
+        const newTheme = rootHtml.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        rootHtml.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateDarkModeButton(newTheme);
+    };
+
+    const updateDarkModeButton = (currentTheme) => {
+        if (darkModeBtn) {
+            if (currentTheme === 'dark') {
+                darkModeBtn.textContent = '☀️';
+                darkModeBtn.style.backgroundColor = '#ffcc66';
+                darkModeBtn.style.color = '#333';
+            } else {
+                darkModeBtn.textContent = '🌙';
+                darkModeBtn.style.backgroundColor = '#6c757d';
+                darkModeBtn.style.color = 'white';
+            }
+        }
+    };
+    
+    // Inicializa o botão com o tema carregado
+    updateDarkModeButton(savedTheme);
+
+
+    // Estado simples para guardar o número de WhatsApp e os horários
+    let state = {
+        whatsappNumber: localStorage.getItem('presencaWhatsapp') || '',
+        horarios: JSON.parse(localStorage.getItem('horariosPorTurma')) || {},
+    };
+    
+    // Obter IDs dos elementos DOM
+    const dom = Object.fromEntries(
+        Array.from(document.querySelectorAll('[id]')).map(el => [el.id.replace(/-(\w)/g, (m, p1) => p1.toUpperCase()), el])
+    );
+    
+    // ==============================================================================
+    // 1. BANCO DE DADOS DE TURMAS E ALUNOS (Sem alteração)
+    // ==============================================================================
+    
+    // Configurações de Turmas
+    const turmasPorColegio = {
+        "Colégio Objetivo": ["1º ANO", "2º ANO", "3º ANO", "4º ANO-A", "4º ANO-B", "5º ANO", "6º ANO", "7º ANO", "8º ANO", "9º ANO", "1º MÉDIO", "2º MÉDIO", "3º MÉDIO"],
+        "Colégio GP": ["1º ANO", "2º ANO", "3º ANO-A", "3º ANO-B", "4º ANO", "5º ANO"]
+    };
+
+    // Banco de Dados de Alunos (CHAVES: Colégio|Turma) - (Ocultado para brevidade)
+    const listasDeAlunos = {
+        // Colégio Objetivo
+        "Colégio Objetivo|1º ANO": [
+            "ALICE ARRUDA MARTINS", "ALICE MEIRELES BARROS DA SILVA", "ANA JULIA LINHARES SANTANA", "BENICIO DOS SANTOS SOUTO", "BRYAN DE PADUA SILVA", "DÉBORA TEIXEIRA FARIAS", 
+            "DIEGO CHAGAS GONÇALVES", "EDUARDO ROCHA ANICETO ALVES NOGUEIRA", "ELOYSA MAGALHÃES CONCEIÇÃO DA SILVA", "EMANUELLY DE OLIVEIRA SILVA", "HELENA CAVAZANA BUENO", 
+            "HELENA MENDES SANTANA", "HELOISA MENDES BOMFIM", "HELOISA SANTOS CAVALCANTE", "JOÃO RABELO", "JULIA BAZONNI SOUZA", "LAURA ALVES BORZAGA", 
+            "LIVIA GONÇALVES CAVALCANTE", "LORENA RAMALHO MORAIS", "LUAN DE ALMEIDA GONÇALVES", "MIGUEL FEITOSA VAZ", "PEDRO HENRIQUE DA COSTA WENING", "REBECCA SILVA ARAUJO ROSA", 
+            "SAM CALEB NAPOLITANO ESTANISLAU SAMPAIO", "SOPHIA SANTOS FERREIRA", "THAIS IZIDORO COSTA", "VICTOR YURI XAVIER"
+        ],
+        "Colégio Objetivo|2º ANO": [
+            "ANALU CORREIA", "ANNA JÚLIA HOLANDA NOGUEIRA", "ARTHUR PASCOLA MENDES", "CLARICE DOS SANTOS", "EZEQUIAS SILVINO PIMENTA", "GABRIEL GREGÓRIO FERREIRA", 
+            "HELOISA RODRIGUES DA SILVA", "ISABELLA OHANA PEREIRA MACEDO", "JOAO MIGUEL FRANCISCO ROCHA", "LETICIA MARTINS FERREIRA", "LIZ BELLA CANDIDO DA SILVA", 
+            "LORENA VAZ SOARES", "LUANA CARVALHO DE PAULO", "MATHEUS ALBUQUERQUE SILVA", "MILENA DE SOUZA CUPIAN", "THEO ELIAS DOS SANTOS"
+        ],
+        "Colégio Objetivo|3º ANO": [
+            "ANA JULIA GOMES", "BIANCA DA SILVA MORAES", "DAVI LUCCA DA COSTA WENING", "FABIO GAEL TEIXEIRA RIBEIRO", "GUILHERME FERREIRA BARBOSA", "HUGO SERRANO SILOTTO", 
+            "JOAQUIM FERREIRA DE MORAIS", "LEONARDO FERRAZ DE OLIVEIRA", "LETÍCIA VIEIRA DA SILVA AUKSTAKOJIS", "LILLY FRATOGIANNI MONTEIRO", "LIVIA SOARES DE SOUZA", 
+            "LUIZA ALVES DE MACEDO SOUSA", "LUIZA CABRAL CORREA", "LUNA ARAGÃO DE RESENDE", "MARCOS HENRIQUE CORREA CAPARELLI", "MAYARA PORFIRIO DE SOUSA", "MIGUEL DA SILVA SANTOS", 
+            "NICOLAS LINHARES SANTANA", "RAFAELA MAGALHÃES DE MATOS", "TEO ALMEIDA DIAS"
+        ],
+        "Colégio Objetivo|4º ANO-A": [
+            "EMILLY LOUIS COELHO HORVAT", "GIOVANNA LEITE GIACOMETTI", "IGOR ALEXANDRE DA SILVA OLIVEira", "JOÃO LUCCA VALERIO CHERAGATI", "LAURA NASCIMENTO GONZaga",
+            "LORENA SANTESSA LOPES", "LUIS ANTONIO GUEDES DE OLIVEIRA RIOS", "MIRELLA MARQUES NASCIMENTO"
+        ],
+        "Colégio Objetivo|4º ANO-B": [
+            "ANNA CLARA LACERDA DO NASCIMENTO", "ARTHUR RIBEIRO DE OLIVEIRA", "BERNARDO DOS SANTOS PICOLLI", "ENZO ADRIANO SOUZA SILVA", "HEITOR MARQUES GONÇALVES",
+            "HEITOR TREVIZANI DA SILVA", "ISAQUE TEIXEIRA", "JOÃO LUCAS ARAUJO FERREIRA", "JOÃO LUCAS PAREJA COZZOLINO", "JULIO CESAR Santana SALGADO",
+            "MADALENI NAPOLITANO ESTANISLAU SAMPAIO", "MARIA FERNANDA LEAL FRANÇA", "PEDRO HENRIQUE DE OLIVEIRA", "VALENTINA CARDOSO DESTACIO"
+        ],
+        "Colégio Objetivo|5º ANO": [
+            "ANNA FLAVIA NAVI ROCHA", "ARTHUR DE SOUSA CARVALHO", "BRYAN RIBEIRO DA SILVA", "EMANUELLE MORAES DE SOUZA", "GABRIEL HOLANDA DA SILVA", "GABRIEL WANDERLEI CAVAZANA BUENO",
+            "GUILHERME PEREIRA DE LIMA", "ISAAC RAFAEL DO NASCIMENTO BIZERRA", "ISAQUE DE ARAUJO SOUZA", "LARISSA SAGLIA DO NASCIMENTO", "MANUELLA LACERDA ANDRADE PAULINO",
+            "MANUELLA SANTOS CAPELOTO", "MARIA EDUARDA SOUZA RAMOS", "NICOLLE RESENDE SALGADO"
+        ],
+        "Colégio Objetivo|6º ANO": [
+            "ANA JULIA BERTO SOARES", "CAROLINA BEZERRA AGUIAR", "DAVI GONÇALVES CAVALCANTE DOS SANTOS", "DAVI RIBeiro RODRIGUES", "DAVI SAMUEL DE LIMA MARCIANO",
+            "FELIPE OLIVEIRA FREITAS", "HENRIQUE PEREIRA DURAES", "LUIS FELIPE GOMES DA CUsta", "MARCOS DA SILVA GOMES SANTOS", "MARIANNA MARTINS DA SILVA",
+            "MELISSA ALVES GUEDES CORREIA", "VITÓRIA DA SILVA MARTINHO", "WANIELY KETILLY DE LIMA SILVA ALMEIDA"
+        ],
+        "Colégio Objetivo|7º ANO": [
+            "ADRIELLY SILVA NASCIMENTO", "ALICE DE SOUSA BITELMAN", "ANA LIVIA DE SOBRAL RIBEIRO", "CAMILA DIAS DE MORAES ALVES", "DANIEL SCUTELLA MAGALHÃES BUENO",
+            "ELIZABETH LEMOS BRANDÃO", "GUSTAVO LAGO DE LIMA", "JOÃO VITOR DE MOURA MOLINA", "JUAN SANTOS LACERDA", "JÚLIA VICENTE DANTAS", "MANUELLA FLORÊCIO TRIUMPHO",
+            "MARIA CLARA LOPES", "MARIANE FIGUEIREDO BARROS", "MIRELA COSTA RABELO", "SOFIA VALENTE DA SILVA"
+        ],
+        "Colégio Objetivo|8º ANO": [
+            "ALICE CORREIA", "ANA CLARA FERREIRA DOS ANTOS", "ANA JULIA OLIVEIRA FREITAS", "DAVI MACEDO HERRERO", "DAVID FELIPI SOUZA", "GABRIELLA NAVI SELOFITE SOARES DA SILVA",
+            "GUILHERME RODRIGUES DE SOUZA", "GUSTAVO NOGUEIRA DE SOUZA", "JOAQUIM FERNANDES SILVA", "LEONARDO MAIA DIAS COSTA", "LUCAS DIAS NEVES DA SILVA", "LUCAS MACEDO BUeno",
+            "MANUELLA RIBEIRO DA SILVA", "MANUELA APOSTOLO HILBBELN", "MARIA ALICE VIEIRA LAUTON DOS SANTOS", "MIGUEL FRATOGIANNI MONTEIRO", "MIGUEL HERRERO"
+        ],
+        "Colégio Objetivo|9º ANO": [
+            "ARTHUR FERREIRA GALO DE MORAES", "ERICK DOMINGOS DOS SANTOS", "GUILHERME DE JESUS FONSECA", "HUGO GERMANO DE PAULA FEITOSA", "IHAGO HENRIQUE DA SILVA OLIVEIRA",
+            "ISABELLA MARQUES DO NASCIMENTO", "JULIA DA SILVA SOUZA", "LUCAS ROCHA RUFINO", "LUIZ MATEUS COELHO GAVA", "MARIA ALICE FERNANDES FERREIRA",
+            "MARIA EDUARDA DA SILVA SOUZA", "MARIA GABRIELA PEREIRA DA SILVA", "MELLYSSA ALCANTARA DE OLIVEIRA", "MURILO GONÇALVES MACHADO", "PABLO HENRIQUE PEREIRA DA SILVA",
+            "RENAN SOARES DOS SANTOS", "THIAGO OLIVEIRA COELHO", "VINICIUS SOUZA RAMALHO", "YASMIN RODRIGUES DOS SANTOS"
+        ],
+        "Colégio Objetivo|1º MÉDIO": [
+            "DANIEL CARDOSO SAMPAIO", "DAVI FRANKLIN CANDIDO BATISTA JOAQUIM", "DAVI XAVIER DE ALMEIDA CERQUEIRA", "GABRIEL MARZIONNA DO NASCIMENTO", "GABRIELA CAMILO CORREA",
+            "HENRY LEAL LORENZO", "IGOR SANTESSO DE OLIVEIRA", "ISABEL DE CAMARGO NASCIMENTO", "ISABELLA ALVES LIMA", "KAUÃ BERTONCINI ALBERTIN", "KAUÃ CRUZ OLIVEIRA",
+            "LAURA ALVES FREITAS", "LAURA MACEDO BUENO", "MANUELLA DE SOUSA BARBOSA", "MATHEUS PEREIRA DE SOUZA", "RYAN VICTOR DA SILVA MARQUES", "SOFIA ALVES DE OLIVEIRA"
+        ],
+        "Colégio Objetivo|2º MÉDIO": [
+            "BEATRIZ DE CAMARGO NASCIMENTO", "BEATRIZ GABRIELLY LARANJEIRA DE LIMA", "BRUNO BONI DOS SANTOS", "ENDRIL MORAES DE SOUZA", "GABRIELLE BATISTA DE SOUSA",
+            "GIOVANNA TORRES DE GUZMAN", "ISABEL MARTINS", "ISABELLA FERREIRA GULFIER", "LARISSA VITORIA TELES DE OLIVEIRA", "LAURA DE JESUS FONSECA",
+            "MARIA CLARA ALVES CARVALHO", "MARIA EDUARDA BONFIM DA SILVA", "MELISSA ALVES MARTINS DE OLIVEIRA CORREIA", "MILLENA LEITE FERREIRA", "MYLLENA FREIRE DA SILVA",
+            "NICOLLE ALVES BARTELLA", "PAULO HENRIQUE TEIXEIRA MARTINS", "REBECCA DE OLIVEIRA DANTAS DOS SANTOS", "YASMIM SILVA FERNANDES DE MORAIS"
+        ],
+        "Colégio Objetivo|3º MÉDIO": [
+            "BEATRIZ VIEIRA DA SILVA AUKSTAKOJIS", "DAVI SILVA DE MATOS", "ENZO MERCHAN CARDEAL", "ESHILEY DE OLIVEIRA SILVA", "MARCUS VINICIUS DE SOUZA CRUZ",
+            "MARIA FERNANDA FERREIRA GULFIER", "MATHEUS DA SILVA ROCHA", "MIGUEL FLORENCIO TRIUMPHO", "NICOLAS FERNANDES SILVA", "RAFAEL SPINA", "RENATO SPINA", "YASMIN NASCIMENTO DUARTE"
+        ],
+        // Colégio GP
+        "Colégio GP|1º ANO": [
+            "ANA CLARA ALVES MAIA", "ANNE ARAÚJO SOARES", "BERNARDO ALMEIDA FARIAS", "BERNARDO CONCEIÇÃO DOS SANTOS", "GHAEL DE SALES", "HELENA ESTHER CASTRO NEVES",
+            "MATHEUS BISPO DA SILVA", "SARAH ARAÚJO DA SIVA"
+        ],
+        "Colégio GP|2º ANO": [
+            "ALICE DE LIMA VITAL", "ANA TEREZA NASCIMENTO DA SILVA", "APOLO AMÉRICO TAVARES COSTA", "BENICIO SOUSA SANTIAGO", "ISABELLA RODRIGUES ALEXANDRE",
+            "LAURA SOPHIA MOURA DOS SANTOS", "LUCAS SANTOS SERRA", "MIGUEL ALVES RIBEIRO", "RODRIGO ALVES NASCIMENTO",
+        ],
+        "Colégio GP|3º ANO-A": [
+            "ANTONY DOURADO DE SOUZA", "DEIVID GUIMARÃES RODRIGUES", "LORENA DONNARUMMA BENTUBO LOPES", "MIGUEL DA SILVA COSTA", "SAMUEL OLIVEIRA MACHADO",
+        ],
+        "Colégio GP|3º ANO-B": [
+            "KAUÊ XAVIER DE MOURA", "LEONARDO CAVALCANTE DA SILVA", "LIZZY ROCHA DE OLIVEIRA", "LORENZO DEGAN DE ANDRADE", "LUAN RIBEIRO ROCHA",
+            "MANUELLA ARAÚJO DA SILVA", "MIGUEL DOMINGUES OLIVEIRA", "NICOLLY FERNANDES DA SILVA LIMA", "PEDRO SANTAROSA BEZERRA",
+        ],
+        "Colégio GP|4º ANO": [
+            "ANA LUIZA FERREIRA DE JESUS", "ANY MARCELLY SILVA NUNES", "GLENDA ISABELLY B. BATISTA", "ISABELA ARAUJO ROCHA", "LETICIA VALADARES DOMENICALI NETO",
+            "PEDRO BEZERRA REGES", "PEDRO HENRIQUE OLIVEIRA COIMBRA",
+        ],
+        "Colégio GP|5º ANO": [
+            "GEOVANNA FRANCO GAMA", "MANUELA CAVALCANTE DA MOTA", "MARIO AUGUSTO SILVA DOS SANTOS", "NATALLE ALMEIDA REIS", "NICOLY MARQUES DA SILVA MENDES",
+            "PEDRO DOMINGUES DE MORAES OLIVEIRA", "YASMIN MOREIRA BARRETO",
+        ],
+    };
+    
+    // ==============================================================================
+    // 2. FUNÇÕES DE CONFIGURAÇÃO E UTILIDADE 
+    // ==============================================================================
+
+    const saveSettings = () => {
+        state.whatsappNumber = dom.settingWhatsapp.value.replace(/\D/g, '');
+        localStorage.setItem('presencaWhatsapp', state.whatsappNumber);
+        alert('Número de WhatsApp salvo com sucesso!');
+    };
+
+    const setPresencaDate = () => {
+        const hoje = new Date();
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        dom.presencaData.value = `${dia}/${mes}/2025`;
+    };
+    
+    const saveHorario = (colegio, turma, horario) => {
+        if (!colegio || !turma) {
+            alert("Erro: Selecione o colégio e a turma para salvar o horário.");
+            return false;
+        }
+        const key = `${colegio}|${turma}`;
+        state.horarios[key] = horario;
+        localStorage.setItem('horariosPorTurma', JSON.stringify(state.horarios));
+        alert(`Horário "${horario}" salvo/editado para a turma ${turma}!`);
+        return true;
+    };
+
+    const loadHorario = (colegio, turma) => {
+        if (!colegio || !turma) return '';
+        const key = `${colegio}|${turma}`;
+        return state.horarios[key] || '';
+    };
+    
+    const popularTurmas = (colegioSelect, turmaSelect) => {
+        const colegioSelecionado = colegioSelect.value;
+        turmaSelect.innerHTML = '';
+        
+        if (colegioSelecionado === "") {
+            turmaSelect.disabled = true;
+            turmaSelect.classList.add('turma-disabled');
+            turmaSelect.innerHTML = '<option value="">Selecione Colégio</option>';
+            return;
+        }
+
+        turmaSelect.disabled = false;
+        turmaSelect.classList.remove('turma-disabled');
+
+        let defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = `TURMA`;
+        turmaSelect.appendChild(defaultOption);
+
+        const turmas = turmasPorColegio[colegioSelecionado] || [];
+        turmas.forEach(turma => {
+            let option = document.createElement('option');
+            option.value = turma;
+            option.textContent = turma;
+            turmaSelect.appendChild(option);
+        });
+    };
+    
+    const carregarAlunos = (colegio, turma) => {
+        const key = `${colegio}|${turma}`;
+        const alunos = listasDeAlunos[key];
+        const tbody = dom.listaAlunos;
+        tbody.innerHTML = ''; // Limpa a tabela
+
+        if (!alunos) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--c-danger-text); font-style: italic;">Não há lista de alunos cadastrada para esta turma.</td></tr>`;
+            return;
+        }
+
+        alunos.forEach(nomeAluno => {
+            const row = document.createElement('tr');
+            const nameAttribute = `status_${nomeAluno.replace(/[^a-zA-Z0-9\s]/g, '')}`; 
+
+            row.setAttribute('data-aluno', nomeAluno);
+            
+            row.innerHTML = `
+                <td>${nomeAluno}</td>
+                <td class="radio-cell"><input type="radio" name="${nameAttribute}" value="P" required checked></td>
+                <td class="radio-cell"><input type="radio" name="${nameAttribute}" value="F"></td>
+            `;
+            tbody.appendChild(row);
+        });
+    };
+    
+    const resetRadios = () => {
+        const alunosRows = dom.listaAlunos.querySelectorAll('tr[data-aluno]');
+        alunosRows.forEach(row => {
+            const nomeAluno = row.getAttribute('data-aluno');
+            const nameAttribute = `status_${nomeAluno.replace(/[^a-zA-Z0-9\s]/g, '')}`; 
+            const presenteRadio = row.querySelector(`input[name="${nameAttribute}"][value="P"]`);
+            if (presenteRadio) {
+                presenteRadio.checked = true;
+            }
+        });
+    };
+    
+    // ==============================================================================
+    // 3. FUNÇÕES DE PROCESSAMENTO DE FALTAS (Para validação)
+    // ==============================================================================
+
+    /**
+     * FUNÇÃO: Valida o formulário e coleta os dados de falta.
+     */
+    const processarFaltas = () => {
+        const colegio = dom.presencaColegio.value;
+        const turma = dom.presencaTurma.value;
+        const data = dom.presencaData.value;
+        const horario = dom.presencaHorario.value.trim() || 'Não Informado';
+        
+        if (!state.whatsappNumber || state.whatsappNumber.length < 8) {
+            return { status: 'error', message: "⚠️ Por favor, salve seu número de WhatsApp nas Configurações." };
+        }
+        
+        if (!colegio || !turma) {
+            return { status: 'error', message: "⚠️ Por favor, selecione o Colégio e a Turma." };
+        }
+        
+        let presentes = 0;
+        let faltas = []; // Nomes dos alunos que faltaram
+        let faltasDestaSessao = []; // Objetos de falta para salvar
+
+        const alunosRows = dom.listaAlunos.querySelectorAll('tr[data-aluno]');
+        let todosMarcados = true;
+        
+        if(alunosRows.length === 0) {
+             return { status: 'error', message: "⚠️ Não há alunos para marcar nesta turma." };
+        }
+
+        alunosRows.forEach(row => {
+            const nomeAluno = row.getAttribute('data-aluno');
+            const nameAttribute = `status_${nomeAluno.replace(/[^a-zA-Z0-9\s]/g, '')}`; 
+            const statusElement = row.querySelector(`input[name="${nameAttribute}"]:checked`);
+            
+            if (statusElement) {
+                const status = statusElement.value;
+                if (status === 'P') {
+                    presentes++;
+                } else if (status === 'F') {
+                    faltas.push(nomeAluno); // Para o relatório diário e confirmação
+                    const registroFalta = { data: data, colegio: colegio, turma: turma, aluno: nomeAluno };
+                    faltasDestaSessao.push(registroFalta); // Para o histórico
+                }
+            } else {
+                todosMarcados = false;
+            }
+        });
+        
+        if (!todosMarcados) {
+             return { status: 'error', message: "⚠️ ATENÇÃO! Todos os alunos devem ser marcados (Presente ou Faltou)." };
+        }
+        
+        return { status: 'success', colegio, turma, data, horario, presentes, faltas, faltasDestaSessao };
+    };
+
+    /**
+     * FUNÇÃO: Salva a lista de faltas da sessão no histórico geral (localStorage).
+     * MODIFICADA para incluir um registro "PRESENTE" se não houver faltas.
+     */
+    const persistirFaltas = (dataSession) => {
+        let faltasGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
+        const { colegio, turma, data, faltasDestaSessao, faltas } = dataSession;
+
+        // 1. Cria a chave de sessão para evitar duplicidade (Data + Turma)
+        const sessionKey = `${data}|${colegio}|${turma}`;
+
+        // 2. Remove registros antigos desta mesma sessão
+        faltasGerais = faltasGerais.filter(f => {
+            const fKey = `${f.data}|${f.colegio}|${f.turma}`;
+            return fKey !== sessionKey;
+        });
+
+        if (faltas.length === 0) {
+            // Se não houver faltas, adiciona um registro especial (aluno: "PRESENTE")
+            const registroPresenca = { data: data, colegio: colegio, turma: turma, aluno: "PRESENTE" };
+            faltasGerais.push(registroPresenca);
+        } else {
+            // Se houver faltas, adiciona todos os registros de falta
+            faltasDestaSessao.forEach(registroFalta => {
+                faltasGerais.push(registroFalta);
+            });
+        }
+        
+        localStorage.setItem('registroDeFaltas', JSON.stringify(faltasGerais));
+    };
+
+    /**
+     * FUNÇÃO: Ação do botão "Apenas Salvar Faltas"
+     * AJUSTADA para usar a nova lógica de persistência.
+     */
+    const apenasSalvarFaltas = () => {
+        const data = processarFaltas();
+        if (data.status === 'error') {
+            dom.presencaStatus.textContent = data.message;
+            return;
+        }
+        
+        let msg = (data.faltas.length > 0)
+            ? `Confirma as seguintes ${data.faltas.length} falta(s)?\n\n${data.faltas.join('\n')}\n\nAo clicar 'OK', as faltas serão salvas no histórico.`
+            : "Nenhuma falta registrada.\n\nConfirma o registro de 100% de presença para esta aula?";
+        
+        if (!confirm(msg)) {
+            dom.presencaStatus.textContent = "Salvamento cancelado.";
+            return;
+        }
+        
+        persistirFaltas(data); // Passa o objeto completo 'data'
+        resetRadios();
+        dom.presencaStatus.textContent = "✅ Presença registrada no histórico com sucesso.";
+    };
+
+    /**
+     * FUNÇÃO: Ação do botão "Enviar Relatório de Presença"
+     */
+    const gerarRelatorioPresenca = (e) => {
+        e.preventDefault();
+        const data = processarFaltas();
+        
+        if (data.status === 'error') {
+            dom.presencaStatus.textContent = data.message;
+            return;
+        }
+
+        let msg = (data.faltas.length > 0)
+            ? `Confirma as seguintes ${data.faltas.length} falta(s)?\n\n${data.faltas.join('\n')}\n\nAo clicar 'OK', o relatório DIÁRIO será enviado e as faltas salvas.`
+            : "Nenhuma falta registrada.\n\nDeseja enviar o relatório de presença diário mesmo assim?";
+        
+        if (!confirm(msg)) {
+            dom.presencaStatus.textContent = "Envio cancelado.";
+            return;
+        }
+        
+        // 1. Salva no histórico (usando a nova lógica)
+        persistirFaltas(data);
+
+        // 2. Constrói o relatório DIÁRIO
+        let relatorio = `*✅ REGISTRO DE PRESENÇA - ${data.data}*\n`;
+        relatorio += `---------------------------------\n`;
+        relatorio += `*🏫 Colégio:* ${data.colegio}\n`;
+        relatorio += `*📚 Turma:* ${data.turma}\n`;
+        relatorio += `*⏰ Horário:* ${data.horario}\n\n`;
+        relatorio += `*📝 Status dos Alunos:*\n`;
+        relatorio += `*✅ Total de Presentes:* ${data.presentes}\n`;
+        relatorio += `*❌ Lista de Faltas (${data.faltas.length}):*\n`;
+        
+        if (data.faltas.length > 0) {
+            data.faltas.forEach(aluno => {
+                relatorio += `- ${aluno}\n`;
+            });
+        } else {
+            // Mensagem de presença total no relatório diário
+            relatorio += `- 100% de Presença registrada. Nenhuma falta.\n`;
+        }
+        relatorio += `\n_Relatório gerado pelo Sistema de Presença._`;
+        
+        // 3. Reseta os botões
+        resetRadios();
+        
+        // 4. Envia APENAS o relatório diário
+        const whatsappLinkDiario = `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(relatorio)}`;
+        window.open(whatsappLinkDiario, '_blank');
+        
+        dom.presencaStatus.textContent = "✅ Relatório DIÁRIO enviado. Presença salva.";
+    };
+    
+    // ==============================================================================
+    // 4. FUNÇÕES PARA RELATÓRIO GERAL E PDF
+    // ==============================================================================
+
+    /**
+     * FUNÇÃO: Envia o relatório geral por WhatsApp.
+     * MODIFICADA para interpretar o registro "PRESENTE".
+     */
+    const enviarRelatorioGeral = (silentMode = false) => {
+        if (!state.whatsappNumber || state.whatsappNumber.length < 8) {
+            if (!silentMode) { 
+                alert("⚠️ Por favor, salve seu número de WhatsApp nas Configurações acima.");
+            }
+            return;
+        }
+
+        let faltasGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
+        
+        if (faltasGerais.length === 0) {
+            if (!silentMode) { 
+                alert('Nenhuma presença ou falta registrada no histórico.');
+            }
+            return;
+        }
+
+        let relatorioGeral = `*HISTÓRICO GERAL DE PRESENÇA/FALTAS*\n`;
+        relatorioGeral += `---------------------------------\n\n`;
+        
+        let faltasAgrupadas = {};
+        faltasGerais.forEach(falta => {
+            const key = `*${falta.data}* - ${falta.colegio} (${falta.turma})`;
+            if (!faltasAgrupadas[key]) {
+                faltasAgrupadas[key] = [];
+            }
+            faltasAgrupadas[key].push(falta.aluno);
+        });
+
+        for (const key in faltasAgrupadas) {
+            relatorioGeral += `${key}\n`;
+            
+            const alunosDaSessao = faltasAgrupadas[key];
+            
+            if (alunosDaSessao.length === 1 && alunosDaSessao[0] === "PRESENTE") {
+                // Se for o registro especial de 100% de presença
+                relatorioGeral += `*✅ 100% de Presença - Nenhuma falta registrada.*\n`;
+            } else {
+                // Caso contrário, lista as faltas
+                alunosDaSessao.forEach(aluno => {
+                    relatorioGeral += `- ${aluno}\n`;
+                });
+            }
+            relatorioGeral += `\n`; 
+        }
+        
+        relatorioGeral += `\n_Relatório geral gerado em ${new Date().toLocaleDateString('pt-BR')}_`;
+
+        const whatsappLinkGeral = `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(relatorioGeral)}`;
+        window.open(whatsappLinkGeral, '_blank');
+    };
+
+    const limparRelatorioGeral = () => {
+        if (confirm('Tem certeza que deseja apagar PERMANENTEMENTE todo o histórico de faltas? Esta ação não pode ser desfeita.')) {
+            localStorage.removeItem('registroDeFaltas');
+            alert('Histórico de faltas foi limpo com sucesso.');
+        }
+    };
+    
+    // =======================================================
+    // ##### FUNÇÃO PARA IMPRIMIR RELATÓRIO GERAL EM PDF (AJUSTADA) #####
+    // =======================================================
+    const imprimirRelatorioGeral = () => {
+        // 1. Validar se existe histórico
+        let faltasGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
+        
+        if (faltasGerais.length === 0) {
+            alert('Nenhuma presença ou falta registrada no histórico para gerar o Relatório Geral.');
+            dom.presencaStatus.textContent = "⚠️ Nenhuma presença ou falta registrada no histórico.";
+            return;
+        }
+
+        // 2. Processar e agrupar dados (mesma lógica do WhatsApp)
+        let faltasAgrupadas = {};
+        faltasGerais.forEach(falta => {
+            // Chave de agrupamento: Data | Colégio (Turma)
+            const key = `${falta.data} | ${falta.colegio} (${falta.turma})`;
+            if (!faltasAgrupadas[key]) {
+                faltasAgrupadas[key] = [];
+            }
+            faltasAgrupadas[key].push(falta.aluno);
+        });
+
+        // 3. Criar a estrutura HTML do relatório
+        const tempDiv = document.createElement('div');
+        tempDiv.id = 'tabela-impressao-temp';
+        
+        // Título principal
+        let relatorioHTML = `<h1>HISTÓRICO GERAL DE PRESENÇA/FALTAS</h1>`;
+        relatorioHTML += `<h2>Relatório gerado em ${new Date().toLocaleString('pt-BR')}</h2>`;
+        
+        // Conteúdo agrupado (um bloco para cada grupo Data/Colégio/Turma)
+        for (const key in faltasAgrupadas) {
+            const [data, info] = key.split(' | ');
+
+            // Título do Bloco
+            relatorioHTML += `<h3>${data} - ${info}</h3>`;
+            
+            // Início da tabela de faltantes
+            relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+            
+            const alunosDaSessao = faltasAgrupadas[key];
+            
+            if (alunosDaSessao.length === 1 && alunosDaSessao[0] === "PRESENTE") {
+                 // Se for o registro especial de 100% de presença
+                relatorioHTML += `<thead><tr><th style="width: 100%; background-color: #d4edda !important; color: #155724 !important;">✅ 100% de Presença - Nenhuma falta registrada.</th></tr></thead>`;
+            } else {
+                 // Caso contrário, lista as faltas
+                relatorioHTML += `<thead><tr><th style="width: 100%;">Alunos Faltantes (${alunosDaSessao.length})</th></tr></thead>`;
+                relatorioHTML += `<tbody>`;
+                
+                // Linhas com nomes dos alunos
+                alunosDaSessao.forEach(aluno => {
+                    relatorioHTML += `<tr><td>${aluno}</td></tr>`;
+                });
+                
+                relatorioHTML += `</tbody>`; // Fecha o corpo da tabela de faltantes
+            }
+            
+            relatorioHTML += `</table>`; // Fecha a tabela
+        }
+
+        tempDiv.innerHTML = relatorioHTML;
+
+        // 4. Adicionar a div temporária ao corpo e imprimir
+        document.body.appendChild(tempDiv);
+        
+        // 5. CHAMA A CAIXA DE IMPRESSÃO
+        window.print();
+        
+        // 6. RESTAURAÇÃO 
+        setTimeout(() => {
+            if (document.body.contains(tempDiv)) {
+                document.body.removeChild(tempDiv);
+            }
+            dom.presencaStatus.textContent = "✅ Impressão do Relatório GERAL solicitada. Verifique o destino do PDF.";
+        }, 500); 
+    };
+
+    /**
+     * FUNÇÃO: Rola a página suavemente para o topo.
+     */
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
+
+    // ==============================================================================
+    // 5. INICIALIZAÇÃO E EVENTOS 
+    // ==============================================================================
+
+    dom.settingWhatsapp.value = state.whatsappNumber;
+    
+    // --- Eventos do Card de Configurações ---
+    dom.toggleSettingsBtn.addEventListener('click', () => {
+        const panel = dom.settingsPanel;
+        // Lógica de texto removida, mantém apenas o display toggle
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+        } else {
+            panel.style.display = 'none';
+        }
+    });
+    
+    // Event Listener para o Modo Noturno
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', toggleDarkMode);
+    }
+
+
+    dom.saveSettingsBtn.addEventListener('click', saveSettings);
+    
+    dom.settingColegio.addEventListener('change', () => {
+        popularTurmas(dom.settingColegio, dom.settingTurma);
+        dom.settingHorario.value = '';
+    });
+    
+    dom.settingTurma.addEventListener('change', () => {
+        const horarioSalvo = loadHorario(dom.settingColegio.value, dom.settingTurma.value);
+        dom.settingHorario.value = horarioSalvo;
+    });
+
+    dom.settingSaveHorarioBtn.addEventListener('click', () => {
+        saveHorario(dom.settingColegio.value, dom.settingTurma.value, dom.settingHorario.value);
+    });
+
+    // --- Eventos do Card de Lançamento ---
+    
+    dom.presencaColegio.addEventListener('change', () => {
+        popularTurmas(dom.presencaColegio, dom.presencaTurma);
+        dom.listaAlunos.innerHTML = `<tr><td colspan="3" style="text-align: center;">Selecione uma Turma para carregar a lista de alunos.</td></tr>`;
+        dom.presencaHorario.value = '';
+    });
+    
+    dom.presencaTurma.addEventListener('change', () => {
+        const colegio = dom.presencaColegio.value;
+        const turma = dom.presencaTurma.value;
+        if (colegio && turma) {
+            dom.presencaHorario.value = loadHorario(colegio, turma);
+            carregarAlunos(colegio, turma);
+        } else {
+             dom.listaAlunos.innerHTML = `<tr><td colspan="3" style="text-align: center;">Selecione uma Turma para carregar a lista de alunos.</td></tr>`;
+             dom.presencaHorario.value = '';
+        }
+    });
+
+    // Eventos de Submit e Relatório
+    dom.formPresenca.addEventListener('submit', gerarRelatorioPresenca); 
+    dom.saveFaltasBtn.addEventListener('click', apenasSalvarFaltas);
+    
+    dom.savePdfBtn.addEventListener('click', imprimirRelatorioGeral); 
+    
+    dom.sendFullReportBtn.addEventListener('click', () => {
+        enviarRelatorioGeral(false);
+    });
+    dom.clearFullReportBtn.addEventListener('click', limparRelatorioGeral);
+    
+    // NOVO EVENTO PARA O BOTÃO VOLTAR AO TOPO
+    dom.scrollToTopBtn.addEventListener('click', scrollToTop);
+
+
+    // --- Inicialização ---
+    setPresencaDate();
+    
+    // ATIVA O COLÉGIO PADRÃO (OBJETIVO) E CARREGA SUAS TURMAS
+    popularTurmas(dom.presencaColegio, dom.presencaTurma);
+    
+});
+</script>
+</body>
+</html>
