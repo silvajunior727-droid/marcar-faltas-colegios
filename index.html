@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Presença Escolar 2025</title>
+    <title>Registro de Presença Escolar 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"> 
     
     <style>
         /* Estilos base copiados e simplificados */
         :root {
-            --c-primary: #4a90e2;
+            --c-primary: #7abaf2;
             --c-secondary: #50e3c2;
             --c-success: #28a745;
             --c-bg: #f7f9fc;
@@ -22,8 +22,8 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.08);
             --c-danger-text: #721c24;
             --c-danger-bg: #dc3545;
-            --c-warning-bg: #f0ad4e;
-            --c-info-bg: #17a2b8; 
+            --c-warning-bg: salmon;
+            --c-info-bg: lightgreen; 
             --c-input-readonly-bg: #eee;
         }
 
@@ -39,8 +39,8 @@
             --c-secondary: #50e3c2; 
             --c-danger-text: #ff9999;
             --c-danger-bg: #cc3333;
-            --c-warning-bg: #ffcc66;
-            --c-info-bg: #4dd0e1;
+            --c-warning-bg: salmon;
+            --c-info-bg: lightgreen;
             --c-input-readonly-bg: #3c3c3c; 
         }
 
@@ -61,7 +61,7 @@
             margin-bottom: 25px;
             transition: background-color 0.3s, box-shadow 0.3s; 
         }
-        h1 { color: var(--c-primary); text-align: center; margin-bottom: 30px; font-size: 2em; }
+        h1 { color: var(--c-primary); text-align: center; margin-bottom: 10px; font-size: 2em; }
         h2 { 
             margin-top: 0; 
             color: var(--c-text); 
@@ -74,7 +74,7 @@
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-field { display: flex; flex-direction: column; }
         label { margin-bottom: 8px; font-weight: 600; font-size: 0.9em; }
-        input[type="text"], input[type="tel"], select { 
+        input[type="text"], input[type="tel"], input[type="date"], select { 
             padding: 12px; 
             border: 1px solid var(--c-border); 
             border-radius: 8px; 
@@ -95,7 +95,6 @@
             color: var(--c-text-gray); 
             cursor: not-allowed; 
         }
-
 
         /* Estilo para agrupar Horário e Botão de Salvar */
         .horario-group { 
@@ -125,13 +124,11 @@
         
         /* Tabela de Presença */
         .table-wrapper {
-            /* Removendo overflow-x auto aqui, pois vamos forçar a compactação. */
             overflow-x: auto; 
             margin-top: 20px;
         }
         table { 
             width: 100%; 
-            /* Reduzindo min-width para o máximo que a tela do celular pode suportar */
             min-width: 100%; 
             border-collapse: separate; 
             border-spacing: 0; 
@@ -140,21 +137,55 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
         }
         th, td { 
-            /* Padding padrão do desktop */
             padding: 12px 15px; 
             border-bottom: 1px solid var(--c-border); 
             text-align: left;
             background-color: var(--c-card);
             transition: background-color 0.3s; 
         }
-        /* Cor do texto do cabeçalho da tabela para preto/dark gray */
         th { 
             background-color: var(--c-primary); 
-            color: #333; /* Forçado para cor escura */
+            color: #333; 
             font-weight: 700; 
             text-align: center; 
         }
-        .radio-cell { text-align: center; }
+        
+        /* --- NOVOS ESTILOS: CAIXAS DE SELEÇÃO E OBSERVAÇÕES --- */
+        .check-cell { text-align: center; vertical-align: middle; }
+        
+        /* Aumentando as caixinhas para facilitar o clique */
+        .check-cell input[type="checkbox"] { 
+            transform: scale(1.6); 
+            cursor: pointer; 
+            margin: 0;
+        }
+        
+        /* Cores: Verde claro para presença, Salmão para ocorrências */
+        .check-presenca { accent-color: lightgreen; }
+        .check-ocorrencia { accent-color: salmon; }
+        
+        /* Linha oculta para a caixa de observação */
+        .obs-row {
+            display: none;
+            background-color: var(--c-bg);
+        }
+        .obs-row.active {
+            display: table-row;
+        }
+        .obs-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px dashed var(--c-primary);
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9em;
+            resize: vertical;
+            min-height: 45px;
+            box-sizing: border-box;
+            background-color: var(--c-card);
+            color: var(--c-text);
+        }
+        /* ------------------------------------------------------ */
 
         /* Estilos de Botões */
         .button-group { display: flex; gap: 10px; margin-top: 15px; }
@@ -167,33 +198,27 @@
         .btn-full-width {
             width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;
         }
-        /* Cor do texto dos botões de ação para preto/dark gray */
         .btn-warning { 
             background-color: var(--c-warning-bg); 
-            color: #333; /* Forçado para preto */
+            color: #333; 
         }
-        .btn-warning:hover { background-color: #e69500; }
-        /* Cor do texto do botão de PDF para preto/dark gray */
+        .btn-warning:hover { filter: brightness(0.9); }
         .btn-info { 
             background-color: var(--c-info-bg); 
-            color: #333; /* Forçado para preto */
+            color: #333; 
         }
-        .btn-info:hover { background-color: #138496; }
-        /* Cor do texto do botão de Envio/Limpar Histórico */
+        .btn-info:hover { filter: brightness(0.9); }
         #send-full-report-btn { color: #333; }
         #clear-full-report-btn { color: #333; }
         
-        /* NOVO ID DO BOTÃO DE ROLAGEM */
         #scroll-to-top-btn {
-            background-color: #6c757d; /* Cor neutra/cinza para rolagem */
+            background-color: #6c757d; 
             color: black !important;
         }
         #scroll-to-top-btn:hover { background-color: #5a6268; }
         
-        /* Área de Status e Configuração */
-        #presenca-status { margin-top: 15px; color: var(--c-danger-text); text-align: center; font-weight: 600; }
+        #presenca-status { margin-top: 15px; color: var(--c-danger-text); text-align: center; font-weight: 600; }   
 
-        /* Estilos específicos para botões de utilidade no topo */
         .utility-buttons {
             display: flex;
             gap: 10px;
@@ -201,14 +226,12 @@
             margin-top: -10px;
         }
         .utility-buttons button {
-            /* AUMENTADO EM ~30% */
             font-size: 1.2em; 
-            padding: 10px 15px; /* Aumentado o padding */
+            padding: 10px 15px; 
             min-width: 80px; 
             box-sizing: border-box;
         }
         
-        /* Mudar a cor do botão de modo noturno para algo neutro */
         #toggle-dark-mode {
             background-color: #6c757d; 
             color: white; 
@@ -216,170 +239,123 @@
 
         /* AJUSTES PARA DISPOSITIVOS MÓVEIS */
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .card {
-                padding: 15px;
-            }
-            h1 {
-                font-size: 1.5em;
-                margin-top: 10px;
-                margin-bottom: 20px;
-            }
-            h2 {
-                margin-top: 15px; 
-            }
-            .form-grid {
-                grid-template-columns: 1fr; 
-                /* Reduz o espaçamento dos campos do formulário para economizar espaço vertical */
-                gap: 10px; 
-            }
-            .form-field input[type="text"], .form-field select {
-                /* Reduz o padding dos inputs principais */
-                padding: 10px;
-            }
-            .utility-buttons {
-                margin-top: 0;
-                float: none;
-                justify-content: space-between;
-                width: 100%;
-                margin-bottom: 10px; 
-            }
-            .utility-buttons button {
-                flex-grow: 1;
-                min-width: auto;
-            }
+            body { padding: 10px; }
+            .card { padding: 15px; }
+            h1 { font-size: 1.5em; margin-top: 10px; margin-bottom: 10px; }
+            h2 { margin-top: 15px; }
+            .form-grid { grid-template-columns: 1fr; gap: 10px; }
+            .form-field input[type="text"], .form-field input[type="date"], .form-field select { padding: 10px; }
+            .utility-buttons { margin-top: 0; float: none; justify-content: space-between; width: 100%; margin-bottom: 10px; }
+            .utility-buttons button { flex-grow: 1; min-width: auto; }
             
-            /* ##### OTIMIZAÇÃO CRÍTICA PARA A TABELA EM CELULARES ##### */
-            .table-wrapper {
-                /* Força a remoção de rolagem horizontal desnecessária se os ajustes funcionarem */
-                overflow-x: hidden; 
-            }
-            table {
-                /* Força a largura total da tela */
-                width: 100%;
-            }
-            th, td { 
-                /* Reduz drasticamente o padding horizontal para caber o conteúdo */
-                padding: 8px 5px; 
-                font-size: 0.8em; /* Reduz o tamanho da fonte */
-                white-space: normal; /* Permite quebras de linha para nomes longos */
-            }
-            th:nth-child(1), td:nth-child(1) {
-                /* Dá mais espaço para o nome do aluno */
-                width: 55%; 
-                font-size: 0.85em;
-            }
-            th:nth-child(2), td:nth-child(2),
-            th:nth-child(3), td:nth-child(3) {
-                /* Espaço mínimo para os radio buttons */
-                width: 22.5%; 
-                padding: 8px 2px;
-            }
-            .radio-cell input {
-                /* Aumenta o tamanho do radio button para facilitar o toque */
-                transform: scale(1.3);
-            }
-            /* ##### FIM DA OTIMIZAÇÃO CRÍTICA PARA A TABELA ##### */
+            .table-wrapper { overflow-x: hidden; }
+            table { width: 100%; }
+            th, td { padding: 8px 5px; font-size: 0.8em; white-space: normal; }
+            th:nth-child(1), td:nth-child(1) { width: auto; font-size: 0.85em; }
+            .check-cell { padding: 8px 5px; }
+            /* No celular a caixa fica um pouquinho menor para caber todas as opções lado a lado */
+            .check-cell input[type="checkbox"] { transform: scale(1.4); } 
         }
 
 
-        /* ESTILOS DE IMPRESSÃO (MELHORADOS) */
+
+
+@page {
+            size: auto;
+            margin: 8mm;
+        }
+
+        /* ESTILOS DE IMPRESSÃO BLOQUEADOS POR DIA */
         @media print {
-            /* 1. Ocultar TUDO por padrão */
-            body * {
-                visibility: hidden !important;
-            }
-            
-            /* 2. Mostrar APENAS a nova estrutura de relatório */
-            body > .container,
-            #tabela-impressao-temp,
-            #tabela-impressao-temp * {
-                visibility: visible !important;
-                display: block !important;
-                width: 100%;
-                max-width: none;
-                /* Adiciona cor de fundo branca para garantir legibilidade */
+            body, html {
+                margin: 0 !important;
+                padding: 0 !important;
                 background-color: white !important;
             }
-            
-            /* 3. Estilizar a tabela temporária */
-            #tabela-impressao-temp {
-                margin: 0;
-                padding: 20px; 
-                position: absolute;
-                left: 0;
-                top: 0;
-                border-collapse: collapse;
-                color: #000;
+            body * { 
+                visibility: hidden !important; 
             }
-            .print-table-content {
-                margin-top: 5px; 
-                margin-bottom: 20px; /* Adiciona mais espaço abaixo da tabela */
+            #tabela-impressao-temp, 
+            #tabela-impressao-temp * { 
+                visibility: visible !important; 
             }
-
-            /* Estilo dos cabeçalhos da tabela */
-            .print-table-content th {
-                background-color: #f0f0f0 !important; 
-                color: #000;
-                font-weight: bold;
-                border: 1px solid #000 !important; 
-                padding: 8px 12px; /* Aumenta um pouco o padding */
-                text-align: left;
-            }
-            /* Estilo das células do corpo da tabela */
-            .print-table-content td {
-                border: 1px solid #ccc; 
-                border-top: none;
-                border-bottom: none;
-                padding: 6px 12px; /* Aumenta o padding vertical e horizontal */
-                background-color: #fff !important; 
-            }
-            /* Garante borda inferior no último item */
-            .print-table-content tr:last-child td {
-                border-bottom: 1px solid #000 !important;
-            }
-
-            /* 4. Estilizar cabeçalhos do Relatório */
-            #tabela-impressao-temp h1 { 
-                font-size: 1.8em; 
-                border-bottom: 3px solid #000; 
-                padding-bottom: 8px; 
-                margin-bottom: 5px; 
+            #tabela-impressao-temp { 
+                position: absolute !important; 
+                left: 0 !important; 
+                top: 0 !important; 
+                width: 100% !important;
+                margin: 0 !important; 
+                padding: 0 !important; 
+                background-color: white !important; 
                 color: #000 !important;
-                text-align: center;
+            }
+            /* IMPEDE QUE O BLOCO DE UM DIA SEJA QUEBRADO ENTRE PÁGINAS */
+            .print-day-block {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 12px !important;
+            }
+            .print-table-content { 
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-top: 4px !important; 
+                margin-bottom: 6px !important; 
+            }
+            .print-table-content th { 
+                background-color: #f0f0f0 !important; 
+                color: #000 !important; 
+                font-weight: bold; 
+                border: 1px solid #000 !important; 
+                padding: 5px 8px !important; 
+                text-align: left; 
+            }
+            .print-table-content td { 
+                border: 1px solid #ccc !important; 
+                border-top: none !important; 
+                border-bottom: none !important; 
+                padding: 4px 8px !important; 
+                background-color: #fff !important; 
+                color: #000 !important;
+            }
+            .print-table-content tr:last-child td { 
+                border-bottom: 1px solid #000 !important; 
+            }
+            #tabela-impressao-temp h1 { 
+                font-size: 1.3em !important; 
+                border-bottom: 2px solid #000 !important; 
+                padding-bottom: 4px !important; 
+                margin-bottom: 4px !important; 
+                color: #000 !important; 
+                text-align: center; 
             }
             #tabela-impressao-temp h2 { 
-                font-size: 1.1em; 
-                padding: 0; 
-                margin-bottom: 25px; 
-                text-align: center;
-                font-weight: normal;
-                border-bottom: 1px solid #999; 
-                padding-bottom: 5px;
+                font-size: 0.9em !important; 
+                padding: 0 !important; 
+                margin-bottom: 10px !important; 
+                text-align: center; 
+                font-weight: normal; 
+                border-bottom: 1px solid #999 !important; 
+                padding-bottom: 3px !important; 
             }
-            /* Estilo do título do bloco (Data - Colégio/Turma) */
-            #tabela-impressao-temp h3 {
-                font-size: 1.2em;
-                margin-top: 25px;
-                margin-bottom: 5px;
-                font-weight: bold;
-                color: #4a90e2 !important; /* Usando a cor primária diretamente */
-                border-bottom: 1px dashed #ccc; 
-                padding-bottom: 3px;
-                
-                /* MELHORIA PRINCIPAL: Evita que o cabeçalho do bloco fique na última linha da página */
-                page-break-after: avoid;
-                page-break-inside: avoid;
+            #tabela-impressao-temp h3 { 
+                font-size: 1em !important; 
+                margin-top: 6px !important; 
+                margin-bottom: 3px !important; 
+                font-weight: bold; 
+                color: #000 !important; 
+                border-bottom: 1px dashed #ccc !important; 
+                padding-bottom: 2px !important; 
             }
         }
-        
+
+
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>📚 Sistema de Registro de Presença 2025</h1>
+        <h1>📚 Sistema de Registro de Presença 2026</h1>
+        <p style="text-align: center; font-weight: 600; margin-top: -5px; margin-bottom: 25px; color: var(--c-primary);"></p>
         
         <div class="card">
             <div class="utility-buttons">
@@ -448,51 +424,76 @@
                             <option value="">Selecione um Colégio primeiro</option>
                         </select>
                     </div>
-                    <div class="form-field">
-                        <label for="presenca-data">Data (Ano 2025):</label>
-                        <input type="text" id="presenca-data" required readonly>
-                    </div>
                     
                     <div class="form-field">
+                        <label for="presenca-data">Data:</label>
+                        <input type="date" id="presenca-data" required>
+                    </div>
+                    
+<div class="form-field">
                         <label for="presenca-horario">Horário:</label>
                         <input type="text" id="presenca-horario" readonly>
+                    </div>
+                    
+                    <!-- NOVO: SELETORES DE EXIBIÇÃO DA TABELA -->
+                    <div class="form-field" style="grid-column: 1 / -1; margin-top: 10px;">
+                        <label>O que avaliar hoje?</label>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px;">
+                            <label style="cursor: pointer; font-weight: 600;"><input type="checkbox" id="toggle-col-presenca" checked disabled> ✅ Presença</label>
+                            <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-apostila"> 📖 Apostila</label>
+                            <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-trabalho"> 📄 Trabalho</label>
+                            <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-obs"> 💬 Observação</label>
+                        </div>
                     </div>
                 </div>
 
                 <hr>
-                <div class="table-wrapper"> <table>
+                <div class="table-wrapper"> 
+                    <table id="tabela-presenca">
                         <thead>
                             <tr>
-                                <th>Nome do Aluno</th>
-                                <th>Presente</th>
-                                <th>Faltou</th>
+                                <th style="width: 50%;">Nome do Aluno</th>
+                                
+                                <!-- COLUNA 1: PRESENÇA (Com botão Mestre) -->
+                                <th class="col-presenca" style="text-align: center; cursor: pointer;" title="Marcar/Desmarcar Todos">
+                                    <button type="button" id="btn-toggle-todos" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">✅</button>
+                                </th>
+                                
+			<!-- COLUNAS EXTRAS COM BOTÃO MESTRE -->
+                                <th class="col-extra col-apostila" style="display: none; text-align: center;" title="Marcar/Desmarcar Todos - Apostila">
+                                    <button type="button" id="btn-toggle-apostila" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">📖</button>
+                                </th>
+                                <th class="col-extra col-trabalho" style="display: none; text-align: center;" title="Marcar/Desmarcar Todos - Trabalho">
+                                    <button type="button" id="btn-toggle-trabalho" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">📄</button>
+                                </th>
+                                <th class="col-extra col-obs" style="display: none; text-align: center; font-size: 1.5em;" title="Adicionar Observação">💬</th>
                             </tr>
                         </thead>
                         <tbody id="listaAlunos">
-                            <tr><td colspan="3" style="text-align: center;">Selecione um Colégio e uma Turma para carregar a lista de alunos.</td></tr>
+                            <tr><td colspan="5" style="text-align: center;">Selecione um Colégio e uma Turma para carregar a lista de alunos.</td></tr>
                         </tbody>
                     </table>
                 </div>
                 
-                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral de Faltas</h3>
+                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral de Ocorrências</h3>
                 
-                <button type="button" id="save-faltas-btn" class="btn-primary btn-warning btn-full-width">
+<button type="button" id="save-faltas-btn" class="btn-primary btn-full-width" style="background-color: #fff3cd; color: #333; box-shadow: 0 5px #e0a800; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #e0a800'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'">
                     💾 SALVAR FALTAS!
                 </button>
 
-                <button type="button" id="save-pdf-btn" class="btn-primary btn-info btn-full-width">
+                <button type="button" id="save-pdf-btn" class="btn-primary btn-full-width" style="background-color: #d4edda; color: #333; box-shadow: 0 5px #28a745; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #28a745'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #28a745'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #28a745'">
                     📄 IMPRIMIR RELATÓRIO!
                 </button>
                 
-                <button type="button" class="btn-primary" id="send-full-report-btn" style="background-color: var(--c-secondary); color: #333; width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;">
+                <button type="button" id="send-full-report-btn" class="btn-primary btn-full-width" style="background-color: #d1ecf1; color: #333; box-shadow: 0 5px #17a2b8; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #17a2b8'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #17a2b8'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #17a2b8'">
                     💬 ENVIAR RELATÓRIO!
                 </button>
 
-                <button type="button" class="btn-primary" id="clear-full-report-btn" style="background-color: var(--c-danger-bg); color: #333; width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;">
+                <button type="button" id="clear-full-report-btn" class="btn-primary btn-full-width" style="background-color: #f8d7da; color: #333; box-shadow: 0 5px #dc3545; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #dc3545'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #dc3545'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #dc3545'">
                     🗑️ LIMPAR HISTÓRICO!
                 </button>
                 
-                <button type="button" class="btn-primary btn-full-width" id="scroll-to-top-btn">
+                <button type="button" id="scroll-to-top-btn" class="btn-primary btn-full-width" style="background-color: #e2e3e5; color: #333; box-shadow: 0 5px #6c757d; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #6c757d'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #6c757d'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #6c757d'">
                     ⬆️ VOLTAR AO TOPO!
                 </button>
                 
@@ -502,26 +503,18 @@
     </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  // Pergunta ao usuário se deseja apagar o histórico ao abrir a página
-  setTimeout(function() {
-    if (confirm("Deseja apagar todo o histórico do relatório agora? Isso removerá permanentemente todos os registros.")) {
-      localStorage.removeItem('registroDeFaltas');
-      alert('O histórico foi apagado com sucesso!');
-    }
-  }, 100);
-
-  // ...restante do seu código permanece igual
-});
-
 document.addEventListener('DOMContentLoaded', () => {
-    // ==============================================================================
-    // 0. CONFIGURAÇÃO DE MODO NOTURNO
-    // ==============================================================================
+    
+    setTimeout(function() {
+        if (confirm("Deseja apagar todo o histórico do relatório agora? Isso removerá permanentemente todos os registros.")) {
+            localStorage.removeItem('registroDeFaltas');
+            alert('O histórico foi apagado com sucesso!');
+        }
+    }, 100);
+
     const rootHtml = document.documentElement;
     const darkModeBtn = document.getElementById('toggle-dark-mode');
     
-    // Tenta carregar a preferência do usuário (padrão é 'light')
     const savedTheme = localStorage.getItem('theme') || 'light';
     rootHtml.setAttribute('data-theme', savedTheme);
     
@@ -546,143 +539,124 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // Inicializa o botão com o tema carregado
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', toggleDarkMode);
+    }
+    
     updateDarkModeButton(savedTheme);
 
-
-    // Estado simples para guardar o número de WhatsApp e os horários
     let state = {
         whatsappNumber: localStorage.getItem('presencaWhatsapp') || '',
         horarios: JSON.parse(localStorage.getItem('horariosPorTurma')) || {},
     };
     
-    // Obter IDs dos elementos DOM
     const dom = Object.fromEntries(
         Array.from(document.querySelectorAll('[id]')).map(el => [el.id.replace(/-(\w)/g, (m, p1) => p1.toUpperCase()), el])
     );
     
-    // ==============================================================================
-    // 1. BANCO DE DADOS DE TURMAS E ALUNOS (Sem alteração)
-    // ==============================================================================
-    
-    // Configurações de Turmas
     const turmasPorColegio = {
-        "Colégio Objetivo": ["1º ANO", "2º ANO", "3º ANO", "4º ANO-A", "4º ANO-B", "5º ANO", "6º ANO", "7º ANO", "8º ANO", "9º ANO", "1º MÉDIO", "2º MÉDIO", "3º MÉDIO"],
-        "Colégio GP": ["1º ANO", "2º ANO", "3º ANO-A", "3º ANO-B", "4º ANO", "5º ANO"]
+        "Colégio Objetivo": ["1º ANO", "2º ANO", "3º ANO", "4º ANO", "5º ANO-A", "5º ANO-B", "6º ANO", "7º ANO", "8º ANO", "9º ANO", "1º MÉDIO", "2º MÉDIO", "3º MÉDIO"],
+        "Colégio GP": ["1º ANO-A", "1º ANO-B", "2º ANO", "3º ANO", "4º ANO-A", "4º ANO-B", "5º ANO"]
     };
 
-    // Banco de Dados de Alunos (CHAVES: Colégio|Turma) - (Ocultado para brevidade)
     const listasDeAlunos = {
-        // Colégio Objetivo
         "Colégio Objetivo|1º ANO": [
-            "ALICE ARRUDA MARTINS", "ALICE MEIRELES BARROS DA SILVA", "ANA JULIA LINHARES SANTANA", "BENICIO DOS SANTOS SOUTO", "BRYAN DE PADUA SILVA", "DÉBORA TEIXEIRA FARIAS", 
-            "DIEGO CHAGAS GONÇALVES", "EDUARDO ROCHA ANICETO ALVES NOGUEIRA", "ELOYSA MAGALHÃES CONCEIÇÃO DA SILVA", "EMANUELLY DE OLIVEIRA SILVA", "HELENA CAVAZANA BUENO", 
-            "HELENA MENDES SANTANA", "HELOISA MENDES BOMFIM", "HELOISA SANTOS CAVALCANTE", "JOÃO RABELO", "JULIA BAZONNI SOUZA", "LAURA ALVES BORZAGA", 
-            "LIVIA GONÇALVES CAVALCANTE", "LORENA RAMALHO MORAIS", "LUAN DE ALMEIDA GONÇALVES", "MIGUEL FEITOSA VAZ", "PEDRO HENRIQUE DA COSTA WENING", "REBECCA SILVA ARAUJO ROSA", 
-            "SAM CALEB NAPOLITANO ESTANISLAU SAMPAIO", "SOPHIA SANTOS FERREIRA", "THAIS IZIDORO COSTA", "VICTOR YURI XAVIER"
+            "ANA CLARA ALVES PRIMO", "ENRICO MORAES DE SOUZA", "GISELLE AVELAR TELES", "GUILHERME GARCIA VIDAL", "GUSTAVO BRITO PAULINHO", "HEITOR CARVALHO NUNES", 
+            "HEITOR RIBEIRO SANTANA", "HENRI CANDIDO DA SILVA", "HENRY FRAZANI", "ISABELLA APARECIDA NERI DE SOUZA", "ISABELLA ROCHA LIMA", 
+            "JOÃO LUCAS FERREIRA LISBOA", "LEVI MACEDO GOIS", "LORENA FERRAZ DE OLIVEIRA", "MANUELA FIRMO DE OLIVEIRA", "MARIA LUISA MOREIRA BRITO", "MIGUEL DE AZEVEDO MENDES", 
+            "MIGUEL MOTA ALVES", "PEDRO HENRIQUE MELO LIRA", "PEDRO NOVAIS RIBEIRO NETO", "SOPHIA ANCELMO CUSTODIO"
         ],
         "Colégio Objetivo|2º ANO": [
-            "ANALU CORREIA", "ANNA JÚLIA HOLANDA NOGUEIRA", "ARTHUR PASCOLA MENDES", "CLARICE DOS SANTOS", "EZEQUIAS SILVINO PIMENTA", "GABRIEL GREGÓRIO FERREIRA", 
-            "HELOISA RODRIGUES DA SILVA", "ISABELLA OHANA PEREIRA MACEDO", "JOAO MIGUEL FRANCISCO ROCHA", "LETICIA MARTINS FERREIRA", "LIZ BELLA CANDIDO DA SILVA", 
-            "LORENA VAZ SOARES", "LUANA CARVALHO DE PAULO", "MATHEUS ALBUQUERQUE SILVA", "MILENA DE SOUZA CUPIAN", "THEO ELIAS DOS SANTOS"
+            "ALICE ARRUDA MARTINS", "ALICE MEIRELES BARROS DA SILVA", "BENICIO DOS SANTOS SOUTO", "BRYAN DE PADUA SILVA", "DÉBORA TEIXEIRA FARIAS", 
+            "DIEGO CHAGAS GONÇALVES", "EDUARDO ROCHA ANICETO ALVES NOGUEIRA", "EMANUELLY DE OLIVEIRA SILVA", "HELENA CAVAZANA BUENO", 
+            "HELENA MENDES SANTANA", "HELOISA MENDES BOMFIM", "HELOISA SANTOS CAVALCANTE", "JOÃO RABELO", "JULIA BAZONNI SOUZA", 
+            "LIVIA GONÇALVES CAVALCANTE", "LORENA RAMALHO MORAIS", "LUAN DE ALMEIDA GONÇALVES", "MIGUEL FEITOSA VAZ", "REBECCA SILVA ARAUJO ROSA", 
+            "SAM CALEB NAPOLITANO ESTANISLAU SAMPAIO", "THAIS IZIDORO COSTA", "VICTOR YURI XAVIER"
         ],
         "Colégio Objetivo|3º ANO": [
-            "ANA JULIA GOMES", "BIANCA DA SILVA MORAES", "DAVI LUCCA DA COSTA WENING", "FABIO GAEL TEIXEIRA RIBEIRO", "GUILHERME FERREIRA BARBOSA", "HUGO SERRANO SILOTTO", 
-            "JOAQUIM FERREIRA DE MORAIS", "LEONARDO FERRAZ DE OLIVEIRA", "LETÍCIA VIEIRA DA SILVA AUKSTAKOJIS", "LILLY FRATOGIANNI MONTEIRO", "LIVIA SOARES DE SOUZA", 
-            "LUIZA ALVES DE MACEDO SOUSA", "LUIZA CABRAL CORREA", "LUNA ARAGÃO DE RESENDE", "MARCOS HENRIQUE CORREA CAPARELLI", "MAYARA PORFIRIO DE SOUSA", "MIGUEL DA SILVA SANTOS", 
-            "NICOLAS LINHARES SANTANA", "RAFAELA MAGALHÃES DE MATOS", "TEO ALMEIDA DIAS"
+            "ANALU CORREIA", "ANNA JÚLIA HOLANDA NOGUEIRA", "ARTHUR PASCOLA MENDES", "CLARICE DOS SANTOS", "EZEQUIAS SILVINO PIMENTA", "GABRIEL GREGÓRIO FERREIRA", 
+            "ISAAC FERNANDES DE BARROS", "ISABELLA OHANA PEREIRA MACEDO", "LETICIA MARTINS FERREIRA", "LIZ BELLA CANDIDO DA SILVA", 
+            "LORENA VAZ SOARES", "LUANA CARVALHO DE PAULO", "MATHEUS ALBUQUERQUE SILVA", "MILENA DE SOUZA CUPIAN"
         ],
-        "Colégio Objetivo|4º ANO-A": [
-            "EMILLY LOUIS COELHO HORVAT", "GIOVANNA LEITE GIACOMETTI", "IGOR ALEXANDRE DA SILVA OLIVEira", "JOÃO LUCCA VALERIO CHERAGATI", "LAURA NASCIMENTO GONZAGA",
+        "Colégio Objetivo|4º ANO": [
+            "ANA JULIA GOMES", "BIANCA DA SILVA MORAES", "ENRICO MACEDO CORREIA", "FABIO GAEL TEIXEIRA RIBEIRO", "GUILHERME FERREIRA BARBOSA", "HUGO SERRANO SILOTTO", 
+            "JOAQUIM FERREIRA DE MORAIS", "JOSE MIGUEL NUNES MENESES", "LEONARDO CAVALCANTE DA MOTA", "LEONARDO FERRAZ DE OLIVEIRA", "LETÍCIA VIEIRA DA SILVA AUKSTAKOJIS", "LILLY FRATOGIANNI MONTEIRO", 
+            "LIVIA SOARES DE SOUZA", "LORENZO MORETTI RUIZ", "LUIZA ALVES DE MACEDO SOUSA", "LUIZA CABRAL CORREA", "LUNA ARAGÃO DE RESENDE", "MARCOS HENRIQUE CORREA CAPARELLI", "MARIA JULIA DUARTE DOS SANTOS", 
+            "MIGUEL DA SILVA SANTOS", "RAFAELA MAGALHÃES DE MATOS", "TEO ALMEIDA DIAS"
+        ],
+        "Colégio Objetivo|5º ANO-A": [
+            "GIOVANNA LEITE GIACOMETTI", "IGOR ALEXANDRE DA SILVA OLIVEIRA", "JOÃO LUCAS PAREJA COZZOLINO", "JOÃO LUCCA VALERIO CHERAGATI", "LAURA NASCIMENTO GONZAGA", "LEONARDO MARTINS FRITZEN", 
             "LORENA SANTESSA LOPES", "LUIS ANTONIO GUEDES DE OLIVEIRA RIOS", "MIRELLA MARQUES NASCIMENTO"
         ],
-        "Colégio Objetivo|4º ANO-B": [
+        "Colégio Objetivo|5º ANO-B": [
             "ANNA CLARA LACERDA DO NASCIMENTO", "ARTHUR RIBEIRO DE OLIVEIRA", "BERNARDO DOS SANTOS PICOLLI", "ENZO ADRIANO SOUZA SILVA", "HEITOR MARQUES GONÇALVES",
-            "HEITOR TREVIZANI DA SILVA", "ISAQUE TEIXEIRA", "JOÃO LUCAS ARAUJO FERREIRA", "JOÃO LUCAS PAREJA COZZOLINO", "JULIO CESAR Santana SALGADO",
-            "MADALENI NAPOLITANO ESTANISLAU SAMPAIO", "MARIA FERNANDA LEAL FRANÇA", "PEDRO HENRIQUE DE OLIVEIRA", "VALENTINA CARDOSO DESTACIO"
-        ],
-        "Colégio Objetivo|5º ANO": [
-            "ANNA FLAVIA NAVI ROCHA", "ARTHUR DE SOUSA CARVALHO", "BRYAN RIBEIRO DA SILVA", "EMANUELLE MORAES DE SOUZA", "GABRIEL HOLANDA DA SILVA", "GABRIEL WANDERLEI CAVAZANA BUENO",
-            "GUILHERME PEREIRA DE LIMA", "ISAAC RAFAEL DO NASCIMENTO BIZERRA", "ISAQUE DE ARAUJO SOUZA", "LARISSA SAGLIA DO NASCIMENTO", "MANUELLA LACERDA ANDRADE PAULINO",
-            "MANUELLA SANTOS CAPELOTO", "MARIA EDUARDA SOUZA RAMOS", "NICOLLE RESENDE SALGADO"
+            "HEITOR TREVIZANI DA SILVA", "ISAQUE TEIXEIRA", "JOÃO LUCAS ARAUJO FERREIRA", "JULIO CESAR SANTANA SALGADO", "MADALENI NAPOLITANO ESTANISLAU SAMPAIO", "MARIA FERNANDA LEAL FRANÇA",
+            "PEDRO HENRIQUE DE OLIVEIRA AMARAL", "VALENTINA CARDOSO DESTACIO"
         ],
         "Colégio Objetivo|6º ANO": [
-            "ANA JULIA BERTO SOARES", "CAROLINA BEZERRA AGUIAR", "DAVI GONÇALVES CAVALCANTE DOS SANTOS", "DAVI RIBEIRO RODRIGUES", "DAVI SAMUEL DE LIMA MARCIANO",
-            "FELIPE OLIVEIRA FREITAS", "HENRIQUE PEREIRA DURAES", "LUIS FELIPE GOMES DA CUsta", "MARCOS DA SILVA GOMES SANTOS", "MARIANNA MARTINS DA SILVA",
-            "MELISSA ALVES GUEDES CORREIA", "VITÓRIA DA SILVA MARTINHO", "WANIELY KETILLY DE LIMA SILVA ALMEIDA"
+            "ARTHUR DE OLIVEIRA MORAES CARDOSO", "ARTHUR DE SOUSA CARVALHO", "BRYAN RIBEIRO DA SILVA", "DAVI SANTOS TRINDADE", "EMANUELLE MORAES DE SOUZA", "GABRIEL WANDERLEI CAVAZANA BUENO",
+            "GUILHERME PEREIRA DE LIMA", "ISAQUE DE ARAUJO SOUZA", "KERRY DA SILVA ARAUJO", "LARISSA SAGLIA DO NASCIMENTO", "MANUELLA CAVALCANTE DA MOTA",
+            "MANUELLA SANTOS CAPELOTO", "MARIA EDUARDA SOUZA RAMOS", "MATHEUS SANTOS RIBEIRO", "NICOLLE RESENDE SALGADO", "THIAGO ROCHA DE FARIAS"
         ],
         "Colégio Objetivo|7º ANO": [
-            "ADRIELLY SILVA NASCIMENTO", "ALICE DE SOUSA BITELMAN", "ANA LIVIA DE SOBRAL RIBEIRO", "CAMILA DIAS DE MORAES ALVES", "DANIEL SCUTELLA MAGALHÃES BUENO",
-            "ELIZABETH LEMOS BRANDÃO", "GUSTAVO LAGO DE LIMA", "JOÃO VITOR DE MOURA MOLINA", "JUAN SANTOS LACERDA", "JÚLIA VICENTE DANTAS", "MANUELLA FLORÊCIO TRIUMPHO",
-            "MARIA CLARA LOPES", "MARIANE FIGUEIREDO BARROS", "MIRELA COSTA RABELO", "SOFIA VALENTE DA SILVA"
+            "ANA JULIA BERTO SOARES", "DAVI GONÇALVES CAVALCANTE DOS SANTOS", "DAVI RIBEIRO RODRIGUES", "DAVI SAMUEL DE LIMA MARCIANO", "FELIPE OLIVEIRA FREITAS", "HENRIQUE PEREIRA DURAES",
+            "LORENZO SILVEIRA PINHAL", "MARCOS DA SILVA GOMES SANTOS", "MARIANNA MARTINS DA SILVA", "MELISSA ALVES GUEDES CORREIA", "VITÓRIA DA SILVA MARTINHO", "WANIELY KETILLY DE LIMA SILVA ALMEIDA"
         ],
         "Colégio Objetivo|8º ANO": [
-            "ALICE CORREIA", "ANA CLARA FERREIRA DOS ANTOS", "ANA JULIA OLIVEIRA FREITAS", "DAVI MACEDO HERRERO", "DAVID FELIPI SOUZA", "GABRIELLA NAVI SELOFITE SOARES DA SILVA",
-            "GUILHERME RODRIGUES DE SOUZA", "GUSTAVO NOGUEIRA DE SOUZA", "JOAQUIM FERNANDES SILVA", "LEONARDO MAIA DIAS COSTA", "LUCAS DIAS NEVES DA SILVA", "LUCAS MACEDO BUeno",
-            "MANUELLA RIBEIRO DA SILVA", "MANUELA APOSTOLO HILBBELN", "MARIA ALICE VIEIRA LAUTON DOS SANTOS", "MIGUEL FRATOGIANNI MONTEIRO", "MIGUEL HERRERO"
+            "ALICE DE SOUSA BITELMAN", "ANA LIVIA DE SOBRAL RIBEIRO", "DANIEL SCUTELLA MAGALHÃES BUENO", "ELIZABETH LEMOS BRANDÃO", "GUSTAVO LAGO DE LIMA", "JOÃO VITOR DE MOURA MOLINA", 
+            "JUAN SANTOS LACERDA", "MANUELLA FLORÊCIO TRIUMPHO", "MARIA CLARA LOPES", "MARIANE FIGUEIREDO BARROS", "MIRELA COSTA RABELO", "SOFIA SATURNINO ALVES ARAUJO"
         ],
         "Colégio Objetivo|9º ANO": [
-            "ARTHUR FERREIRA GALO DE MORAES", "ERICK DOMINGOS DOS SANTOS", "GUILHERME DE JESUS FONSECA", "HUGO GERMANO DE PAULA FEITOSA", "IHAGO HENRIQUE DA SILVA OLIVEIRA",
-            "ISABELLA MARQUES DO NASCIMENTO", "JULIA DA SILVA SOUZA", "LUCAS ROCHA RUFINO", "LUIZ MATEUS COELHO GAVA", "MARIA ALICE FERNANDES FERREIRA",
-            "MARIA EDUARDA DA SILVA SOUZA", "MARIA GABRIELA PEREIRA DA SILVA", "MELLYSSA ALCANTARA DE OLIVEIRA", "MURILO GONÇALVES MACHADO", "PABLO HENRIQUE PEREIRA DA SILVA",
-            "RENAN SOARES DOS SANTOS", "THIAGO OLIVEIRA COELHO", "VINICIUS SOUZA RAMALHO", "YASMIN RODRIGUES DOS SANTOS"
+            "ALICE CORREIA", "ANA CLARA FERREIRA DOS SANTOS", "ANA JULIA OLIVEIRA FREITAS", "DAVI MACEDO HERRERO", "DAVID FELIPI SOUZA", "GABRIELLA NAVI SELOFITE SOARES DA SILVA",
+            "GUILHERME RODRIGUES DE SOUZA", "GUSTAVO NOGUEIRA DE SOUZA", "JOAQUIM FERNANDES SILVA", "LEONARDO MAIA DIAS COSTA", "LUCAS DIAS NEVES DA SILVA", "LUCAS MACEDO BUENO",
+            "MANOELLA RIBEIRO DA SILVA", "MANUELA APOSTOLO HILBBELN", "MARIA ALICE VIEIRA LAUTON DOS SANTOS", "MARIA LUIZA AMORIM TORRES", "MIGUEL FRATOGIANNI MONTEIRO"
         ],
         "Colégio Objetivo|1º MÉDIO": [
-            "DANIEL CARDOSO SAMPAIO", "DAVI FRANKLIN CANDIDO BATISTA JOAQUIM", "DAVI XAVIER DE ALMEIDA CERQUEIRA", "GABRIEL MARZIONNA DO NASCIMENTO", "GABRIELA CAMILO CORREA",
-            "HENRY LEAL LORENZO", "IGOR SANTESSO DE OLIVEIRA", "ISABEL DE CAMARGO NASCIMENTO", "ISABELLA ALVES LIMA", "KAUÃ BERTONCINI ALBERTIN", "KAUÃ CRUZ OLIVEIRA",
-            "LAURA ALVES FREITAS", "LAURA MACEDO BUENO", "MANUELLA DE SOUSA BARBOSA", "MATHEUS PEREIRA DE SOUZA", "RYAN VICTOR DA SILVA MARQUES", "SOFIA ALVES DE OLIVEIRA"
+            "ARTHUR FERREIRA GALO DE MORAES", "GUILHERME DE JESUS FONSECA", "HUGO GERMANO DE PAULA FEITOSA", "ISABELLA MARQUES DO NASCIMENTO", "LETICIA SOARES FROES", "LUCAS ROCHA RUFINO", 
+            "LUIZ MATEUS COELHO GAVA", "MARIA GABRIELA PEREIRA DA SILVA", "SOFIA CAVALCANTI BUENO", "THIAGO OLIVEIRA COELHO", "VINICIUS SOUZA RAMALHO", "YASMIN RODRIGUES DOS SANTOS"
         ],
         "Colégio Objetivo|2º MÉDIO": [
-            "BEATRIZ DE CAMARGO NASCIMENTO", "BEATRIZ GABRIELLY LARANJEIRA DE LIMA", "BRUNO BONI DOS SANTOS", "ENDRIL MORAES DE SOUZA", "GABRIELLE BATISTA DE SOUSA",
-            "GIOVANNA TORRES DE GUZMAN", "ISABEL MARTINS", "ISABELLA FERREIRA GULFIER", "LARISSA VITORIA TELES DE OLIVEIRA", "LAURA DE JESUS FONSECA",
-            "MARIA CLARA ALVES CARVALHO", "MARIA EDUARDA BONFIM DA SILVA", "MELISSA ALVES MARTINS DE OLIVEIRA CORREIA", "MILLENA LEITE FERREIRA", "MYLLENA FREIRE DA SILVA",
-            "NICOLLE ALVES BARTELLA", "PAULO HENRIQUE TEIXEIRA MARTINS", "REBECCA DE OLIVEIRA DANTAS DOS SANTOS", "YASMIM SILVA FERNANDES DE MORAIS"
+            "DANIEL CARDOSO SAMPAIO", "DAVI FRANKLIN CANDIDO BATISTA JOAQUIM", "DAVI XAVIER DE ALMEIDA CERQUEIRA", "GABRIEL MARZIONNA DO NASCIMENTO", "GABRIELA CAMILO CORREA",
+            "HENRY LEAL LORENZO", "ISABELLA ALVES LIMA", "KAUÃ BERTONCINI ALBERTIN", "KAUÃ CRUZ OLIVEIRA", "LAURA ALVES FREITAS", "LAURA MACEDO BUENO", "MANUELLA DE SOUSA BARBOSA", "MATHEUS PEREIRA DE SOUZA",
+            "SOFIA ALVES DE OLIVEIRA"
         ],
         "Colégio Objetivo|3º MÉDIO": [
-            "BEATRIZ VIEIRA DA SILVA AUKSTAKOJIS", "DAVI SILVA DE MATOS", "ENZO MERCHAN CARDEAL", "ESHILEY DE OLIVEIRA SILVA", "MARCUS VINICIUS DE SOUZA CRUZ",
-            "MARIA FERNANDA FERREIRA GULFIER", "MATHEUS DA SILVA ROCHA", "MIGUEL FLORENCIO TRIUMPHO", "NICOLAS FERNANDES SILVA", "RAFAEL SPINA", "RENATO SPINA", "YASMIN NASCIMENTO DUARTE"
+            "BEATRIZ GABRIELLY LARANJEIRA DE LIMA", "BRUNO BONI DOS SANTOS", "ENDRIL MORAES DE SOUZA", "GABRIELLE BATISTA DE SOUSA",
+            "GIOVANNA TORRES DE GUZMAN", "ISABEL MARTINS", "LAURA DE JESUS FONSECA", "LUCAS ALEXANDRE RIBEIRO DE OLIVEIRA", "MARIA CLARA ALVES CARVALHO", "MARIA EDUARDA BONFIM DA SILVA", 
+            "MELISSA ALVES MARTINS DE OLIVEIRA CORREIA", "MILLENA LEITE FERREIRA", "MYLLENA FREIRE DA SILVA", "NICOLLE ALVES BARTELLA", "PAULO HENRIQUE TEIXEIRA MARTINS", 
+            "REBECCA DE OLIVEIRA DANTAS DOS SANTOS", "YASMIM SILVA FERNANDES DE MORAIS"
         ],
-        // Colégio GP
-        "Colégio GP|1º ANO": [
-            "ANA CLARA ALVES MAIA", "ANNE ARAÚJO SOARES", "BERNARDO ALMEIDA FARIAS", "BERNARDO CONCEIÇÃO DOS SANTOS", "GHAEL DE SALES", "HELENA ESTHER CASTRO NEVES",
-            "MATHEUS BISPO DA SILVA", "SARAH ARAÚJO DA SIVA"
+        "Colégio GP|1º ANO-A": [
+            "BERNARDO CAMPO", "DAVI SILVA OLIVEIRA", "HELENA LIMA DE", "HELOISA MENDES", "ISABELLA FERNAND", "JOANA FERREIRA D", "LAVINIA CINOBILIN", "SOFIA GUEDES CO"
+        ],
+        "Colégio GP|1º ANO-B": [
+            "ANNA JÚLIA SALOMÃO DOURADO", "GAEL DA SILVA MOTA SANTOS", "HELENA LUZ ROSA", "ISRAEL CRUZ PIOLI", "JOQUIM NOAH CIRINO VIEIRA", "LUCCA MIGUEL SOUZA DE OLIVEIRA",
+            "MANUELLA ALBUQUERQUE", "MARIA VITÓRIA RAMALHO PEREIRA", "NAYA MARIA MELO ROCHA", "VALENTIM FERMINO LOPES"
         ],
         "Colégio GP|2º ANO": [
-            "ALICE DE LIMA VITAL", "ANA TEREZA NASCIMENTO DA SILVA", "APOLO AMÉRICO TAVARES COSTA", "BENICIO SOUSA SANTIAGO", "ISABELLA RODRIGUES ALEXANDRE",
-            "LAURA SOPHIA MOURA DOS SANTOS", "LUCAS SANTOS SERRA", "MIGUEL ALVES RIBEIRO", "RODRIGO ALVES NASCIMENTO",
+            "ANA CLARA ALVES MAIA", "ANNE ARAÚJO SOARES", "BERNARDO ALMEIDA FARIAS", "BERNARDO CONCEIÇÃO DOS SANTOS", "GHAEL DE SALES", "HELENA ESTHER CASTRO NEVES",
+            "MATHEUS BISPO DA SILVA"
         ],
-        "Colégio GP|3º ANO-A": [
-            "ANTONY DOURADO DE SOUZA", "DEIVID GUIMARÃES RODRIGUES", "LORENA DONNARUMMA BENTUBO LOPES", "MIGUEL DA SILVA COSTA", "SAMUEL OLIVEIRA MACHADO",
+        "Colégio GP|3º ANO": [
+            "ALICE DE LIMA VITAL", "ANA TEREZA NASCIMENTO DA SILVA", "APOLO AMÉRICO TAVARES COSTA", "BENICIO SOUSA SANTIAGO", "CHRISTIAN JHONATAN SOUZA DANTAS", "GIULIA GOMES AGLIO", 
+            "ISABELLA RODRIGUES ALEXANDRE", "LUCAS SANTOS SERRA", "MARCO ANTÔNIO MENDONÇA CAMACHO", "MIGUEL ALVES RIBEIRO", "RODRIGO ALVES NASCIMENTO"
         ],
-        "Colégio GP|3º ANO-B": [
-            "KAUÊ XAVIER DE MOURA", "LEONARDO CAVALCANTE DA SILVA", "LIZZY ROCHA DE OLIVEIRA", "LORENZO DEGAN DE ANDRADE", "LUAN RIBEIRO ROCHA",
-            "MANUELLA ARAÚJO DA SILVA", "MIGUEL DOMINGUES OLIVEIRA", "NICOLLY FERNANDES DA SILVA LIMA", "PEDRO SANTAROSA BEZERRA",
+        "Colégio GP|4º ANO-A": [
+            "SAMUEL OLIVEIRA MACHADO"
         ],
-        "Colégio GP|4º ANO": [
-            "ANA LUIZA FERREIRA DE JESUS", "ANY MARCELLY SILVA NUNES", "GLENDA ISABELLY B. BATISTA", "ISABELA ARAUJO ROCHA", "LETICIA VALADARES DOMENICALI NETO",
-            "PEDRO BEZERRA REGES", "PEDRO HENRIQUE OLIVEIRA COIMBRA",
+        "Colégio GP|4º ANO-B": [
+            "ANTONY DOURADO DE SOUZA", "DEIVID GUIMARÃES RODRIGUES", "KAUÊ XAVIER DE MOURA", "LIZZY ROCHA DE OLIVEIRA", "LORENA DONNARUMMA BENTUBO LOPES", "LORENZO DEGAN DE ANDRADE", "LUAN RIBEIRO ROCHA",
+            "PEDRO SANTAROSA BEZERRA"
         ],
         "Colégio GP|5º ANO": [
-            "GEOVANNA FRANCO GAMA", "MANUELA CAVALCANTE DA MOTA", "MARIO AUGUSTO SILVA DOS SANTOS", "NATALLE ALMEIDA REIS", "NICOLY MARQUES DA SILVA MENDES",
-            "PEDRO DOMINGUES DE MORAES OLIVEIRA", "YASMIN MOREIRA BARRETO",
-        ],
+            "ANY MARCELLY SILVA NUNES", "LETICIA VALADARES DOMENICALI NETO", "PEDRO BEZERRA REGES", "PEDRO HENRIQUE OLIVEIRA COIMBRA"
+        ]
     };
-    
-    // ==============================================================================
-    // 2. FUNÇÕES DE CONFIGURAÇÃO E UTILIDADE 
-    // ==============================================================================
 
     const saveSettings = () => {
         state.whatsappNumber = dom.settingWhatsapp.value.replace(/\D/g, '');
         localStorage.setItem('presencaWhatsapp', state.whatsappNumber);
         alert('Número de WhatsApp salvo com sucesso!');
-    };
-
-    const setPresencaDate = () => {
-        const hoje = new Date();
-        const dia = String(hoje.getDate()).padStart(2, '0');
-        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-        dom.presencaData.value = `${dia}/${mes}/2025`;
     };
     
     const saveHorario = (colegio, turma, horario) => {
@@ -731,51 +705,144 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
+    // --- FUNÇÃO ATUALIZADA: CARREGAR ALUNOS E MONTAR AS NOVAS COLUNAS ---
     const carregarAlunos = (colegio, turma) => {
         const key = `${colegio}|${turma}`;
         const alunos = listasDeAlunos[key];
         const tbody = dom.listaAlunos;
-        tbody.innerHTML = ''; // Limpa a tabela
+        tbody.innerHTML = ''; 
 
         if (!alunos) {
-            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--c-danger-text); font-style: italic;">Não há lista de alunos cadastrada para esta turma.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--c-danger-text); font-style: italic;">Não há lista de alunos cadastrada para esta turma.</td></tr>`;
             return;
         }
 
         alunos.forEach(nomeAluno => {
+            // Linha principal (Aluno + Caixinhas)
             const row = document.createElement('tr');
-            const nameAttribute = `status_${nomeAluno.replace(/[^a-zA-Z0-9\s]/g, '')}`; 
-
             row.setAttribute('data-aluno', nomeAluno);
             
             row.innerHTML = `
                 <td>${nomeAluno}</td>
-                <td class="radio-cell"><input type="radio" name="${nameAttribute}" value="P" required checked></td>
-                <td class="radio-cell"><input type="radio" name="${nameAttribute}" value="F"></td>
+                <td class="check-cell col-presenca">
+                    <input type="checkbox" class="check-presenca checkbox-presenca-aluno" value="P" checked>
+                </td>
+                <td class="check-cell col-extra col-apostila" style="display: none;">
+                    <input type="checkbox" class="check-ocorrencia checkbox-apostila" title="Esqueceu Apostila">
+                </td>
+                <td class="check-cell col-extra col-trabalho" style="display: none;">
+                    <input type="checkbox" class="check-ocorrencia checkbox-trabalho" title="Não Entregou Trabalho">
+                </td>
+                <td class="check-cell col-extra col-obs" style="display: none;">
+                    <input type="checkbox" class="check-ocorrencia checkbox-obs-toggle" title="Adicionar Observação">
+                </td>
             `;
             tbody.appendChild(row);
+
+            // Linha da observação (escondida logo abaixo)
+            const obsRow = document.createElement('tr');
+            obsRow.className = 'obs-row';
+            obsRow.innerHTML = `
+                <td colspan="5" style="padding: 10px; border-bottom: 2px solid var(--c-primary); border-top: none;">
+                    <textarea class="obs-textarea" placeholder="Escreva a observação para ${nomeAluno}..."></textarea>
+                </td>
+            `;
+            tbody.appendChild(obsRow);
+
+            // Gatilho: Abrir/Fechar a caixa de observação
+            const checkObs = row.querySelector('.checkbox-obs-toggle');
+            checkObs.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    obsRow.classList.add('active');
+                } else {
+                    obsRow.classList.remove('active');
+                    obsRow.querySelector('.obs-textarea').value = ''; // Limpa se fechar
+                }
+            });
         });
+        
+        atualizarColunasVisiveis();
     };
-    
-    const resetRadios = () => {
-        const alunosRows = dom.listaAlunos.querySelectorAll('tr[data-aluno]');
-        alunosRows.forEach(row => {
-            const nomeAluno = row.getAttribute('data-aluno');
-            const nameAttribute = `status_${nomeAluno.replace(/[^a-zA-Z0-9\s]/g, '')}`; 
-            const presenteRadio = row.querySelector(`input[name="${nameAttribute}"][value="P"]`);
-            if (presenteRadio) {
-                presenteRadio.checked = true;
+
+// --- NOVA LÓGICA: FILTROS E BOTÕES MESTRES ---
+    const atualizarColunasVisiveis = () => {
+        const showApostila = document.getElementById('toggle-col-apostila').checked;
+        const showTrabalho = document.getElementById('toggle-col-trabalho').checked;
+        const showObs = document.getElementById('toggle-col-obs').checked;
+
+        document.querySelectorAll('.col-apostila').forEach(el => el.style.display = showApostila ? 'table-cell' : 'none');
+        document.querySelectorAll('.col-trabalho').forEach(el => el.style.display = showTrabalho ? 'table-cell' : 'none');
+        document.querySelectorAll('.col-obs').forEach(el => el.style.display = showObs ? 'table-cell' : 'none');
+    };
+
+    document.getElementById('toggle-col-apostila').addEventListener('change', atualizarColunasVisiveis);
+    document.getElementById('toggle-col-trabalho').addEventListener('change', atualizarColunasVisiveis);
+    document.getElementById('toggle-col-obs').addEventListener('change', atualizarColunasVisiveis);
+
+    // Botão Mestre Presença
+    const btnToggleTodos = document.getElementById('btn-toggle-todos');
+    if (btnToggleTodos) {
+        btnToggleTodos.dataset.status = 'todos'; 
+        btnToggleTodos.addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.checkbox-presenca-aluno');
+            if (btnToggleTodos.dataset.status === 'todos') {
+                checkboxes.forEach(cb => cb.checked = false); // Desmarca tudo (Faltaram)
+                btnToggleTodos.dataset.status = 'nenhum';
+                btnToggleTodos.textContent = '❌';
+            } else {
+                checkboxes.forEach(cb => cb.checked = true); // Marca tudo (Presentes)
+                btnToggleTodos.dataset.status = 'todos';
+                btnToggleTodos.textContent = '✅';
             }
         });
+    }
+
+    // Botão Mestre Apostila
+    const btnToggleApostila = document.getElementById('btn-toggle-apostila');
+    if (btnToggleApostila) {
+        btnToggleApostila.dataset.status = 'nenhum';
+        btnToggleApostila.addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.checkbox-apostila');
+            if (btnToggleApostila.dataset.status === 'nenhum') {
+                checkboxes.forEach(cb => cb.checked = true);
+                btnToggleApostila.dataset.status = 'todos';
+            } else {
+                checkboxes.forEach(cb => cb.checked = false);
+                btnToggleApostila.dataset.status = 'nenhum';
+            }
+        });
+    }
+
+    // Botão Mestre Trabalho
+    const btnToggleTrabalho = document.getElementById('btn-toggle-trabalho');
+    if (btnToggleTrabalho) {
+        btnToggleTrabalho.dataset.status = 'nenhum';
+        btnToggleTrabalho.addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.checkbox-trabalho');
+            if (btnToggleTrabalho.dataset.status === 'nenhum') {
+                checkboxes.forEach(cb => cb.checked = true);
+                btnToggleTrabalho.dataset.status = 'todos';
+            } else {
+                checkboxes.forEach(cb => cb.checked = false);
+                btnToggleTrabalho.dataset.status = 'nenhum';
+            }
+        });
+    }
+    
+    // --- FUNÇÃO ATUALIZADA: LIMPAR FORMULÁRIO DEPOIS DE SALVAR ---
+    const resetFormulario = () => {
+        document.querySelectorAll('.checkbox-presenca-aluno').forEach(cb => cb.checked = true);
+        document.querySelectorAll('.check-ocorrencia').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.obs-row').forEach(row => row.classList.remove('active'));
+        document.querySelectorAll('.obs-textarea').forEach(ta => ta.value = '');
+        
+        if(btnToggleTodos) {
+            btnToggleTodos.textContent = '✅';
+            btnToggleTodos.dataset.status = 'todos';
+        }
     };
     
-    // ==============================================================================
-    // 3. FUNÇÕES DE PROCESSAMENTO DE FALTAS (Para validação)
-    // ==============================================================================
-
-    /**
-     * FUNÇÃO: Valida o formulário e coleta os dados de falta.
-     */
+    // --- FUNÇÃO ATUALIZADA: PROCESSAR FALTAS E OCORRÊNCIAS ---
     const processarFaltas = () => {
         const colegio = dom.presencaColegio.value;
         const turma = dom.presencaTurma.value;
@@ -791,11 +858,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         let presentes = 0;
-        let faltas = []; // Nomes dos alunos que faltaram
-        let faltasDestaSessao = []; // Objetos de falta para salvar
+        let faltas = []; 
+        let ocorrencias = []; // Nova lista para guardar apostila, trabalho, obs
+        let faltasDestaSessao = []; 
 
         const alunosRows = dom.listaAlunos.querySelectorAll('tr[data-aluno]');
-        let todosMarcados = true;
         
         if(alunosRows.length === 0) {
              return { status: 'error', message: "⚠️ Não há alunos para marcar nesta turma." };
@@ -803,65 +870,90 @@ document.addEventListener('DOMContentLoaded', () => {
 
         alunosRows.forEach(row => {
             const nomeAluno = row.getAttribute('data-aluno');
-            const nameAttribute = `status_${nomeAluno.replace(/[^a-zA-Z0-9\s]/g, '')}`; 
-            const statusElement = row.querySelector(`input[name="${nameAttribute}"]:checked`);
+            const checkPresenca = row.querySelector('.checkbox-presenca-aluno');
+            const checkApostila = row.querySelector('.checkbox-apostila');
+            const checkTrabalho = row.querySelector('.checkbox-trabalho');
+            const checkObs = row.querySelector('.checkbox-obs-toggle');
             
-            if (statusElement) {
-                const status = statusElement.value;
-                if (status === 'P') {
-                    presentes++;
-                } else if (status === 'F') {
-                    faltas.push(nomeAluno); // Para o relatório diário e confirmação
-                    const registroFalta = { data: data, colegio: colegio, turma: turma, aluno: nomeAluno };
-                    faltasDestaSessao.push(registroFalta); // Para o histórico
-                }
+            const textarea = row.nextElementSibling.querySelector('.obs-textarea');
+            
+            // 1. Checa Presença
+            if (checkPresenca && checkPresenca.checked) {
+                presentes++;
             } else {
-                todosMarcados = false;
+                faltas.push(nomeAluno); 
+                faltasDestaSessao.push({ data: data, colegio: colegio, turma: turma, aluno: nomeAluno }); 
+            }
+
+            // 2. Checa Ocorrências
+            if (checkApostila && checkApostila.checked) {
+                ocorrencias.push({ aluno: nomeAluno, tipo: 'Sem Apostila' });
+            }
+            if (checkTrabalho && checkTrabalho.checked) {
+                ocorrencias.push({ aluno: nomeAluno, tipo: 'Sem Trabalho' });
+            }
+            if (checkObs && checkObs.checked && textarea.value.trim() !== '') {
+                ocorrencias.push({ aluno: nomeAluno, tipo: 'Obs', texto: textarea.value.trim() });
             }
         });
         
-        if (!todosMarcados) {
-             return { status: 'error', message: "⚠️ ATENÇÃO! Todos os alunos devem ser marcados (Presente ou Faltou)." };
-        }
-        
-        return { status: 'success', colegio, turma, data, horario, presentes, faltas, faltasDestaSessao };
+        return { status: 'success', colegio, turma, data, horario, presentes, faltas, ocorrencias, faltasDestaSessao };
     };
 
-    /**
-     * FUNÇÃO: Salva a lista de faltas da sessão no histórico geral (localStorage).
-     * MODIFICADA para incluir um registro "PRESENTE" se não houver faltas.
-     */
+// --- FUNÇÃO ATUALIZADA: PERSISTIR TODAS AS OCORRÊNCIAS NO HISTÓRICO ---
     const persistirFaltas = (dataSession) => {
-        let faltasGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
-        const { colegio, turma, data, faltasDestaSessao, faltas } = dataSession;
+        let registrosGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
+        const { colegio, turma, data } = dataSession;
 
-        // 1. Cria a chave de sessão para evitar duplicidade (Data + Turma)
         const sessionKey = `${data}|${colegio}|${turma}`;
 
-        // 2. Remove registros antigos desta mesma sessão
-        faltasGerais = faltasGerais.filter(f => {
+        // Remove registros antigos desta mesma sessão para evitar duplicidade
+        registrosGerais = registrosGerais.filter(f => {
             const fKey = `${f.data}|${f.colegio}|${f.turma}`;
             return fKey !== sessionKey;
         });
 
-        if (faltas.length === 0) {
-            // Se não houver faltas, adiciona um registro especial (aluno: "PRESENTE")
-            const registroPresenca = { data: data, colegio: colegio, turma: turma, aluno: "PRESENTE" };
-            faltasGerais.push(registroPresenca);
-        } else {
-            // Se houver faltas, adiciona todos os registros de falta
-            faltasDestaSessao.forEach(registroFalta => {
-                faltasGerais.push(registroFalta);
-            });
+        const alunosRows = dom.listaAlunos.querySelectorAll('tr[data-aluno]');
+        let temRegistros = false;
+
+        alunosRows.forEach(row => {
+            const nomeAluno = row.getAttribute('data-aluno');
+            const checkPresenca = row.querySelector('.checkbox-presenca-aluno');
+            const checkApostila = row.querySelector('.checkbox-apostila');
+            const checkTrabalho = row.querySelector('.checkbox-trabalho');
+            const checkObs = row.querySelector('.checkbox-obs-toggle');
+            const textarea = row.nextElementSibling.querySelector('.obs-textarea');
+
+            // Falta
+            if (checkPresenca && !checkPresenca.checked) {
+                registrosGerais.push({ data, colegio, turma, tipo: 'Falta', aluno: nomeAluno });
+                temRegistros = true;
+            }
+            // Apostila
+            if (checkApostila && checkApostila.checked) {
+                registrosGerais.push({ data, colegio, turma, tipo: 'Apostila', aluno: nomeAluno });
+                temRegistros = true;
+            }
+            // Trabalho
+            if (checkTrabalho && checkTrabalho.checked) {
+                registrosGerais.push({ data, colegio, turma, tipo: 'Trabalho', aluno: nomeAluno });
+                temRegistros = true;
+            }
+            // Observação
+            if (checkObs && checkObs.checked && textarea.value.trim() !== '') {
+                registrosGerais.push({ data, colegio, turma, tipo: 'Obs', aluno: nomeAluno, texto: textarea.value.trim() });
+                temRegistros = true;
+            }
+        });
+
+        if (!temRegistros) {
+            registrosGerais.push({ data, colegio, turma, tipo: 'PRESENTE', aluno: 'PRESENTE' });
         }
         
-        localStorage.setItem('registroDeFaltas', JSON.stringify(faltasGerais));
+        localStorage.setItem('registroDeFaltas', JSON.stringify(registrosGerais));
     };
 
-    /**
-     * FUNÇÃO: Ação do botão "Apenas Salvar Faltas"
-     * AJUSTADA para usar a nova lógica de persistência.
-     */
+
     const apenasSalvarFaltas = () => {
         const data = processarFaltas();
         if (data.status === 'error') {
@@ -878,14 +970,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        persistirFaltas(data); // Passa o objeto completo 'data'
-        resetRadios();
+        persistirFaltas(data); 
+        resetFormulario();
         dom.presencaStatus.textContent = "✅ Presença registrada no histórico com sucesso.";
     };
 
-    /**
-     * FUNÇÃO: Ação do botão "Enviar Relatório de Presença"
-     */
+    // --- FUNÇÃO ATUALIZADA: GERAR RELATÓRIO COM AS OCORRÊNCIAS ---
     const gerarRelatorioPresenca = (e) => {
         e.preventDefault();
         const data = processarFaltas();
@@ -904,10 +994,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // 1. Salva no histórico (usando a nova lógica)
         persistirFaltas(data);
 
-        // 2. Constrói o relatório DIÁRIO
         let relatorio = `*✅ REGISTRO DE PRESENÇA - ${data.data}*\n`;
         relatorio += `---------------------------------\n`;
         relatorio += `*🏫 Colégio:* ${data.colegio}\n`;
@@ -922,29 +1010,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 relatorio += `- ${aluno}\n`;
             });
         } else {
-            // Mensagem de presença total no relatório diário
             relatorio += `- 100% de Presença registrada. Nenhuma falta.\n`;
         }
+        
+        // ADICIONA AS OCORRÊNCIAS NO RELATÓRIO DE WHATSAPP
+        if (data.ocorrencias && data.ocorrencias.length > 0) {
+            relatorio += `\n*⚠️ OCORRÊNCIAS REGISTRADAS:*\n`;
+            data.ocorrencias.forEach(oc => {
+                if (oc.tipo === 'Obs') {
+                    relatorio += `> *${oc.aluno}* (Observação): ${oc.texto}\n`;
+                } else {
+                    relatorio += `> *${oc.aluno}*: ${oc.tipo}\n`;
+                }
+            });
+        }
+
         relatorio += `\n_Relatório gerado pelo Sistema de Presença._`;
         
-        // 3. Reseta os botões
-        resetRadios();
+        resetFormulario();
         
-        // 4. Envia APENAS o relatório diário
         const whatsappLinkDiario = `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(relatorio)}`;
         window.open(whatsappLinkDiario, '_blank');
         
         dom.presencaStatus.textContent = "✅ Relatório DIÁRIO enviado. Presença salva.";
     };
     
-    // ==============================================================================
-    // 4. FUNÇÕES PARA RELATÓRIO GERAL E PDF
-    // ==============================================================================
+    
 
-    /**
-     * FUNÇÃO: Envia o relatório geral por WhatsApp.
-     * MODIFICADA para interpretar o registro "PRESENTE".
-     */
+
+// --- FUNÇÃO ATUALIZADA: RELATÓRIO GERAL NO WHATSAPP COM TODAS AS OCORRÊNCIAS ---
     const enviarRelatorioGeral = (silentMode = false) => {
         if (!state.whatsappNumber || state.whatsappNumber.length < 8) {
             if (!silentMode) { 
@@ -953,40 +1047,55 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        let faltasGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
+        let registrosGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
         
-        if (faltasGerais.length === 0) {
+        if (registrosGerais.length === 0) {
             if (!silentMode) { 
-                alert('Nenhuma presença ou falta registrada no histórico.');
+                alert('Nenhum registro encontrado no histórico.');
             }
             return;
         }
 
-        let relatorioGeral = `*HISTÓRICO GERAL DE PRESENÇA/FALTAS*\n`;
+        let relatorioGeral = `*HISTÓRICO GERAL DE OCORRÊNCIAS E PRESENÇA*\n`;
         relatorioGeral += `---------------------------------\n\n`;
         
-        let faltasAgrupadas = {};
-        faltasGerais.forEach(falta => {
-            const key = `*${falta.data}* - ${falta.colegio} (${falta.turma})`;
-            if (!faltasAgrupadas[key]) {
-                faltasAgrupadas[key] = [];
+        let sessoesAgrupadas = {};
+        registrosGerais.forEach(reg => {
+            const key = `*${reg.data}* - ${reg.colegio} (${reg.turma})`;
+            if (!sessoesAgrupadas[key]) {
+                sessoesAgrupadas[key] = [];
             }
-            faltasAgrupadas[key].push(falta.aluno);
+            sessoesAgrupadas[key].push(reg);
         });
 
-        for (const key in faltasAgrupadas) {
+        for (const key in sessoesAgrupadas) {
             relatorioGeral += `${key}\n`;
+            const itens = sessoesAgrupadas[key];
             
-            const alunosDaSessao = faltasAgrupadas[key];
-            
-            if (alunosDaSessao.length === 1 && alunosDaSessao[0] === "PRESENTE") {
-                // Se for o registro especial de 100% de presença
-                relatorioGeral += `*✅ 100% de Presença - Nenhuma falta registrada.*\n`;
+            if (itens.length === 1 && itens[0].tipo === 'PRESENTE') {
+                relatorioGeral += `*✅ 100% de Presença - Nenhuma ocorrência.*\n`;
             } else {
-                // Caso contrário, lista as faltas
-                alunosDaSessao.forEach(aluno => {
-                    relatorioGeral += `- ${aluno}\n`;
-                });
+                let faltas = itens.filter(i => i.tipo === 'Falta').map(i => i.aluno);
+                let apostilas = itens.filter(i => i.tipo === 'Apostila').map(i => i.aluno);
+                let trabalhos = itens.filter(i => i.tipo === 'Trabalho').map(i => i.aluno);
+                let obsList = itens.filter(i => i.tipo === 'Obs');
+
+                if (faltas.length > 0) {
+                    relatorioGeral += `  ❌ *Faltas (${faltas.length}):*\n`;
+                    faltas.forEach(aluno => relatorioGeral += `    - ${aluno}\n`);
+                }
+                if (apostilas.length > 0) {
+                    relatorioGeral += `  📖 *Esqueceram Apostila (${apostilas.length}):*\n`;
+                    apostilas.forEach(aluno => relatorioGeral += `    - ${aluno}\n`);
+                }
+                if (trabalhos.length > 0) {
+                    relatorioGeral += `  📄 *Não Entregaram Trabalho (${trabalhos.length}):*\n`;
+                    trabalhos.forEach(aluno => relatorioGeral += `    - ${aluno}\n`);
+                }
+                if (obsList.length > 0) {
+                    relatorioGeral += `  💬 *Observações:*\n`;
+                    obsList.forEach(obs => relatorioGeral += `    - *${obs.aluno}*: ${obs.texto}\n`);
+                }
             }
             relatorioGeral += `\n`; 
         }
@@ -997,85 +1106,102 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(whatsappLinkGeral, '_blank');
     };
 
-    const limparRelatorioGeral = () => {
-        if (confirm('Tem certeza que deseja apagar PERMANENTEMENTE todo o histórico de faltas? Esta ação não pode ser desfeita.')) {
+
+
+
+   const limparRelatorioGeral = () => {
+        if (confirm('Tem certeza que deseja apagar PERMANENTEMENTE todo o histórico? Esta ação não pode ser desfeita.')) {
             localStorage.removeItem('registroDeFaltas');
-            alert('Histórico de faltas foi limpo com sucesso.');
+            alert('Histórico foi limpo com sucesso.');
         }
     };
     
-    // =======================================================
-    // ##### FUNÇÃO PARA IMPRIMIR RELATÓRIO GERAL EM PDF (AJUSTADA) #####
-    // =======================================================
+
+   // --- FUNÇÃO CORRIGIDA: IMPRESSÃO LIMPA SEM FOLHAS EM BRANCO ---
     const imprimirRelatorioGeral = () => {
-        // 1. Validar se existe histórico
-        let faltasGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
+        let registrosGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
         
-        if (faltasGerais.length === 0) {
-            alert('Nenhuma presença ou falta registrada no histórico para gerar o Relatório Geral.');
-            dom.presencaStatus.textContent = "⚠️ Nenhuma presença ou falta registrada no histórico.";
+        if (registrosGerais.length === 0) {
+            alert('Nenhum registro encontrado no histórico para gerar o Relatório Geral.');
+            dom.presencaStatus.textContent = "⚠️ Nenhum registro encontrado no histórico.";            
             return;
         }
 
-        // 2. Processar e agrupar dados (mesma lógica do WhatsApp)
-        let faltasAgrupadas = {};
-        faltasGerais.forEach(falta => {
-            // Chave de agrupamento: Data | Colégio (Turma)
-            const key = `${falta.data} | ${falta.colegio} (${falta.turma})`;
-            if (!faltasAgrupadas[key]) {
-                faltasAgrupadas[key] = [];
+        let sessoesAgrupadas = {};
+        registrosGerais.forEach(reg => {
+            const key = `${reg.data} | ${reg.colegio} (${reg.turma})`;
+            if (!sessoesAgrupadas[key]) {
+                sessoesAgrupadas[key] = [];
             }
-            faltasAgrupadas[key].push(falta.aluno);
+            sessoesAgrupadas[key].push(reg);
         });
 
-        // 3. Criar a estrutura HTML do relatório
         const tempDiv = document.createElement('div');
         tempDiv.id = 'tabela-impressao-temp';
         
-        // Título principal
-        let relatorioHTML = `<h1>HISTÓRICO GERAL DE PRESENÇA/FALTAS</h1>`;
-        relatorioHTML += `<h2>Relatório gerado em ${new Date().toLocaleString('pt-BR')}</h2>`;
+        let relatorioHTML = ``;
         
-        // Conteúdo agrupado (um bloco para cada grupo Data/Colégio/Turma)
-        for (const key in faltasAgrupadas) {
+        // Cabeçalho geral no topo da impressão
+        relatorioHTML += `<div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 15px;">`;
+        relatorioHTML += `<h1 style="font-size: 1.4em; margin-bottom: 2px; color: #000 !important;">HISTÓRICO GERAL DE OCORRÊNCIAS E PRESENÇA</h1>`;
+        relatorioHTML += `<h2 style="font-size: 0.85em; font-weight: normal; color: #333 !important; margin: 0;">Relatório gerado em ${new Date().toLocaleString('pt-BR')}</h2>`;
+        relatorioHTML += `</div>`;
+        
+        // Loop por cada dia/sessão encapsulado na div de proteção contra quebras
+        for (const key in sessoesAgrupadas) {
             const [data, info] = key.split(' | ');
 
-            // Título do Bloco
-            relatorioHTML += `<h3>${data} - ${info}</h3>`;
+            relatorioHTML += `<div class="print-day-block">`;
+            relatorioHTML += `<h3 style="font-size: 1em; margin-top: 10px; margin-bottom: 4px; font-weight: bold; color: #000 !important; border-bottom: 1px dashed #ccc; padding-bottom: 2px;">${data} - ${info}</h3>`;
             
-            // Início da tabela de faltantes
-            relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+            const itens = sessoesAgrupadas[key];
             
-            const alunosDaSessao = faltasAgrupadas[key];
-            
-            if (alunosDaSessao.length === 1 && alunosDaSessao[0] === "PRESENTE") {
-                 // Se for o registro especial de 100% de presença
-                relatorioHTML += `<thead><tr><th style="width: 100%; background-color: #d4edda !important; color: #155724 !important;">✅ 100% de Presença - Nenhuma falta registrada.</th></tr></thead>`;
+            if (itens.length === 1 && itens[0].tipo === 'PRESENTE') {
+                relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+                relatorioHTML += `<thead><tr><th style="width: 100%; background-color: #d4edda !important; color: #155724 !important;">✅ 100% de Presença - Nenhuma ocorrência registrada.</th></tr></thead>`;
+                relatorioHTML += `</table>`;
             } else {
-                 // Caso contrário, lista as faltas
-                relatorioHTML += `<thead><tr><th style="width: 100%;">Alunos Faltantes (${alunosDaSessao.length})</th></tr></thead>`;
-                relatorioHTML += `<tbody>`;
-                
-                // Linhas com nomes dos alunos
-                alunosDaSessao.forEach(aluno => {
-                    relatorioHTML += `<tr><td>${aluno}</td></tr>`;
-                });
-                
-                relatorioHTML += `</tbody>`; // Fecha o corpo da tabela de faltantes
+                let faltas = itens.filter(i => i.tipo === 'Falta');
+                let apostilas = itens.filter(i => i.tipo === 'Apostila');
+                let trabalhos = itens.filter(i => i.tipo === 'Trabalho');
+                let obsList = itens.filter(i => i.tipo === 'Obs');
+
+                if (faltas.length > 0) {
+                    relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+                    relatorioHTML += `<thead><tr><th style="width: 100%;">❌ Alunos Faltantes (${faltas.length})</th></tr></thead><tbody>`;
+                    faltas.forEach(f => relatorioHTML += `<tr><td>${f.aluno}</td></tr>`);
+                    relatorioHTML += `</tbody></table>`;
+                }
+
+                if (apostilas.length > 0) {
+                    relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+                    relatorioHTML += `<thead><tr><th style="width: 100%;">📖 Esqueceram a Apostila (${apostilas.length})</th></tr></thead><tbody>`;
+                    apostilas.forEach(a => relatorioHTML += `<tr><td>${a.aluno}</td></tr>`);
+                    relatorioHTML += `</tbody></table>`;
+                }
+
+                if (trabalhos.length > 0) {
+                    relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+                    relatorioHTML += `<thead><tr><th style="width: 100%;">📄 Não Entregaram o Trabalho (${trabalhos.length})</th></tr></thead><tbody>`;
+                    trabalhos.forEach(t => relatorioHTML += `<tr><td>${t.aluno}</td></tr>`);
+                    relatorioHTML += `</tbody></table>`;
+                }
+
+                if (obsList.length > 0) {
+                    relatorioHTML += `<table class="print-table-content" style="width: 100%;">`;
+                    relatorioHTML += `<thead><tr><th style="width: 100%;">💬 Observações Registradas (${obsList.length})</th></tr></thead><tbody>`;
+                    obsList.forEach(o => relatorioHTML += `<tr><td><strong>${o.aluno}:</strong> ${o.texto}</td></tr>`);
+                    relatorioHTML += `</tbody></table>`;
+                }
             }
-            
-            relatorioHTML += `</table>`; // Fecha a tabela
+            relatorioHTML += `</div>`; // Fecha a div do bloco diário
         }
 
         tempDiv.innerHTML = relatorioHTML;
-
-        // 4. Adicionar a div temporária ao corpo e imprimir
         document.body.appendChild(tempDiv);
         
-        // 5. CHAMA A CAIXA DE IMPRESSÃO
         window.print();
         
-        // 6. RESTAURAÇÃO 
         setTimeout(() => {
             if (document.body.contains(tempDiv)) {
                 document.body.removeChild(tempDiv);
@@ -1084,9 +1210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500); 
     };
 
-    /**
-     * FUNÇÃO: Rola a página suavemente para o topo.
-     */
+
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -1094,29 +1218,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-
-    // ==============================================================================
-    // 5. INICIALIZAÇÃO E EVENTOS 
-    // ==============================================================================
-
     dom.settingWhatsapp.value = state.whatsappNumber;
     
-    // --- Eventos do Card de Configurações ---
     dom.toggleSettingsBtn.addEventListener('click', () => {
         const panel = dom.settingsPanel;
-        // Lógica de texto removida, mantém apenas o display toggle
         if (panel.style.display === 'none') {
             panel.style.display = 'block';
         } else {
             panel.style.display = 'none';
         }
     });
-    
-    // Event Listener para o Modo Noturno
-    if (darkModeBtn) {
-        darkModeBtn.addEventListener('click', toggleDarkMode);
-    }
-
 
     dom.saveSettingsBtn.addEventListener('click', saveSettings);
     
@@ -1133,12 +1244,10 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.settingSaveHorarioBtn.addEventListener('click', () => {
         saveHorario(dom.settingColegio.value, dom.settingTurma.value, dom.settingHorario.value);
     });
-
-    // --- Eventos do Card de Lançamento ---
     
     dom.presencaColegio.addEventListener('change', () => {
         popularTurmas(dom.presencaColegio, dom.presencaTurma);
-        dom.listaAlunos.innerHTML = `<tr><td colspan="3" style="text-align: center;">Selecione uma Turma para carregar a lista de alunos.</td></tr>`;
+        dom.listaAlunos.innerHTML = `<tr><td colspan="5" style="text-align: center;">Selecione uma Turma para carregar a lista de alunos.</td></tr>`;
         dom.presencaHorario.value = '';
     });
     
@@ -1149,35 +1258,31 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.presencaHorario.value = loadHorario(colegio, turma);
             carregarAlunos(colegio, turma);
         } else {
-             dom.listaAlunos.innerHTML = `<tr><td colspan="3" style="text-align: center;">Selecione uma Turma para carregar a lista de alunos.</td></tr>`;
+             dom.listaAlunos.innerHTML = `<tr><td colspan="5" style="text-align: center;">Selecione uma Turma para carregar a lista de alunos.</td></tr>`;
              dom.presencaHorario.value = '';
         }
     });
 
-    // Eventos de Submit e Relatório
     dom.formPresenca.addEventListener('submit', gerarRelatorioPresenca); 
     dom.saveFaltasBtn.addEventListener('click', apenasSalvarFaltas);
-    
     dom.savePdfBtn.addEventListener('click', imprimirRelatorioGeral); 
-    
-    dom.sendFullReportBtn.addEventListener('click', () => {
-        enviarRelatorioGeral(false);
-    });
+    dom.sendFullReportBtn.addEventListener('click', () => { enviarRelatorioGeral(false); });
     dom.clearFullReportBtn.addEventListener('click', limparRelatorioGeral);
-    
-    // NOVO EVENTO PARA O BOTÃO VOLTAR AO TOPO
     dom.scrollToTopBtn.addEventListener('click', scrollToTop);
 
-
-    // --- Inicialização ---
-    setPresencaDate();
-    
-    // ATIVA O COLÉGIO PADRÃO (OBJETIVO) E CARREGA SUAS TURMAS
     popularTurmas(dom.presencaColegio, dom.presencaTurma);
-    
+
+    const campoData = dom.presencaData;
+    if (campoData) {
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        campoData.value = `${ano}-${mes}-${dia}`;
+    }
+
 });
 </script>
+
 </body>
-
 </html>
-
