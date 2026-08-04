@@ -70,13 +70,15 @@
             display: inline-block; 
         }
 
-        /* Formulário e Combos */
+/* Formulário e Combos */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-field { display: flex; flex-direction: column; }
         label { margin-bottom: 8px; font-weight: 600; font-size: 0.9em; }
-        input[type="text"], input[type="tel"], input[type="date"], select { 
+input[type="text"], input[type="tel"], input[type="date"], select { 
+            width: 100%;
+            box-sizing: border-box;
             padding: 12px; 
-            border: 1px solid var(--c-border); 
+            border: 1px solid #999999; /* Borda cinza forte e bem definida */
             border-radius: 8px; 
             font-size: 1em; 
             font-family: 'Poppins', sans-serif; 
@@ -237,13 +239,13 @@
             color: white; 
         }
 
-        /* AJUSTES PARA DISPOSITIVOS MÓVEIS */
+/* AJUSTES PARA DISPOSITIVOS MÓVEIS */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .card { padding: 15px; }
             h1 { font-size: 1.5em; margin-top: 10px; margin-bottom: 10px; }
             h2 { margin-top: 15px; }
-            .form-grid { grid-template-columns: 1fr; gap: 10px; }
+            .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; } /* Layout 2 e 2 */
             .form-field input[type="text"], .form-field input[type="date"], .form-field select { padding: 10px; }
             .utility-buttons { margin-top: 0; float: none; justify-content: space-between; width: 100%; margin-bottom: 10px; }
             .utility-buttons button { flex-grow: 1; min-width: auto; }
@@ -1229,7 +1231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    dom.saveSettingsBtn.addEventListener('click', saveSettings);
+    dom.saveSettingsBtn.addEventListener('click', saveSettings);            
     
     dom.settingColegio.addEventListener('change', () => {
         popularTurmas(dom.settingColegio, dom.settingTurma);
