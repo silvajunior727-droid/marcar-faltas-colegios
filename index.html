@@ -454,7 +454,7 @@ input[type="text"], input[type="tel"], input[type="date"], select {
                     
                     <!-- NOVO: SELETORES DE EXIBIÇÃO DA TABELA -->
                     <div class="form-field" style="grid-column: 1 / -1; margin-top: 10px;">
-                        <label>O que avaliar hoje?</label>
+                        <label>O que registrar hoje?</label>
                         <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px;">
                             <label style="cursor: pointer; font-weight: 600;"><input type="checkbox" id="toggle-col-presenca" checked disabled> ✅ Presença</label>
                             <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-apostila"> 📖 Apostila</label>
@@ -492,7 +492,7 @@ input[type="text"], input[type="tel"], input[type="date"], select {
                     </table>
                 </div>
                 
-                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral de Ocorrências</h3>
+                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral</h3>
                 
 <button type="button" id="save-faltas-btn" class="btn-primary btn-full-width" style="background-color: #fff3cd; color: #333; box-shadow: 0 5px #e0a800; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #e0a800'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'">
                     💾 SALVAR FALTAS!
@@ -522,13 +522,51 @@ input[type="text"], input[type="tel"], input[type="date"], select {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
+    // --- NOVO ALERTA CUSTOMIZADO (SEM MOSTRAR O GITHUB) ---
     setTimeout(function() {
-        if (confirm("Deseja apagar todo o histórico do relatório agora? Isso removerá permanentemente todos os registros.")) {
+        // Criação da janela de fundo escuro
+        const modal = document.createElement('div');
+        modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:9999;";
+        
+        // Criação da caixinha de aviso com suporte ao seu Modo Escuro/Claro
+        const box = document.createElement('div');
+        box.style.cssText = "background:var(--c-card); color:var(--c-text); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); width: 85%; max-width: 320px; font-family: 'Poppins', sans-serif;";
+        
+        // Conteúdo, ícones e botões no estilo 3D da sua aplicação
+        box.innerHTML = `
+            <h3 style="margin-top: 0; font-size: 1.2em;">⚠️ Atenção</h3>
+            <p style="margin-bottom: 20px; font-size: 0.95em;">Deseja apagar todo o histórico?</p>
+            <div style="display:flex; gap: 10px;">
+                <button id="modal-btn-cancel" style="flex: 1; background: #e0e0e0; color: #333; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px #b0b0b0;">Cancelar</button>
+                <button id="modal-btn-confirm" style="flex: 1; background: salmon; color: #333; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px #c86455;">Apagar</button>
+            </div>
+        `;
+        
+        modal.appendChild(box);
+        document.body.appendChild(modal);
+
+        // Ação do Botão Cancelar (Apenas fecha a janela)
+        document.getElementById('modal-btn-cancel').onclick = () => {
+            document.body.removeChild(modal);
+        };
+        
+        // Ação do Botão Apagar (Remove os dados e mostra o aviso de sucesso)
+        document.getElementById('modal-btn-confirm').onclick = () => {
             localStorage.removeItem('registroDeFaltas');
-            alert('O histórico foi apagado com sucesso!');
-        }
+            document.body.removeChild(modal);
+            
+            // Aviso de sucesso estilo "Notificação" flutuante (substitui o 'alert' nativo)
+            const success = document.createElement('div');
+            success.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:lightgreen; color:#333; padding:12px 24px; border-radius:8px; font-weight:bold; box-shadow:0 4px #78c878; z-index:9999; font-family: 'Poppins', sans-serif;";
+            success.innerHTML = "✅ Histórico apagado!";
+            document.body.appendChild(success);
+            
+            // O aviso de sucesso some sozinho após 2 segundos e meio
+            setTimeout(() => document.body.removeChild(success), 2500);
+        };
     }, 100);
 
+    // --- MANUTENÇÃO DO TEMA CLARO/ESCURO ---
     const rootHtml = document.documentElement;
     const darkModeBtn = document.getElementById('toggle-dark-mode');
     
