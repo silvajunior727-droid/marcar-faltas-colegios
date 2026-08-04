@@ -382,6 +382,9 @@ input[type="text"], input[type="tel"], input[type="date"], select {
                 <button id="toggle-settings-btn" class="btn-primary">
                     ⚙️
                 </button>
+<button id="btn-ativar-alarmes" title="Ligar/Desligar Alarmes" style="background-color: #e0e0e0; color: #333; border: none; border-radius: 8px; font-size: 1.3em; cursor: pointer; transition: background-color 0.3s;">
+    🔕
+</button>
             </div>
             <h2>Configurações</h2>
             
@@ -1303,7 +1306,7 @@ tempDiv.innerHTML = relatorioHTML;
     });
     
     dom.settingTurma.addEventListener('change', () => {
-        const horarioSalvo = loadHorario(dom.settingColegio.value, dom.settingTurma.value);
+        const horarioSalvo = loadHorario(dom.settingColegio.value, dom.settingTurma.value);   
         dom.settingHorario.value = horarioSalvo;
     });
 
@@ -1348,7 +1351,108 @@ tempDiv.innerHTML = relatorioHTML;
     }
 
 });
-</script>
 
+
+
+// --- SISTEMA INTELIGENTE DE NOTIFICAÇÕES (LIGA/DESLIGA NO MESMO BOTÃO) ---
+    
+    const finaisDeAulaQuarta = ["07:55", "08:45", "10:20", "11:10", "12:00", "13:50", "14:40", "15:00", "15:50"];
+    const finaisDeAulaSexta = ["07:55", "08:45", "09:35", "09:55", "10:45", "11:35", "12:25", "13:55", "14:45", "15:05", "15:55", "16:45", "17:35"];
+
+    let ultimoAlertaNotificado = "";
+    let relogioMonitoramento = null; // Variável que guarda o motor do nosso relógio
+    const btnAlarmes = document.getElementById('btn-ativar-alarmes');
+    
+    // Recupera da memória se você havia deixado ligado ou desligado (padrão é desligado)
+    let alarmesAtivos = localStorage.getItem('alarmesAtivos') === 'true';
+
+    // Função que muda a cor suave e o ícone do botão
+    const atualizarVisualDoBotao = () => {
+        if (alarmesAtivos) {
+            btnAlarmes.innerHTML = "🔔"; // Ícone Ligado
+            btnAlarmes.style.backgroundColor = "#c2e0c6"; // Verde super suave e pastel
+        } else {
+            btnAlarmes.innerHTML = "🔕"; // Ícone Desligado
+            btnAlarmes.style.backgroundColor = "#e0e0e0"; // Cinza claro neutro
+        }
+    };
+
+    const iniciarMonitoramentoInteligente = () => {
+        const diaDaSemana = new Date().getDay();
+        let gradeDoDia = [];
+
+        if (diaDaSemana === 3) gradeDoDia = finaisDeAulaQuarta;
+        else if (diaDaSemana === 5) gradeDoDia = finaisDeAulaSexta;
+        else return;
+
+        // Limpa qualquer relógio antigo rodando nos bastidores antes de ligar um novo
+        if (relogioMonitoramento) clearInterval(relogioMonitoramento);
+
+        relogioMonitoramento = setInterval(() => {
+            const agora = new Date();
+            const previsao = new Date(agora.getTime() + 60000); 
+            
+            const horaFutura = String(previsao.getHours()).padStart(2, '0');
+            const minutoFuturo = String(previsao.getMinutes()).padStart(2, '0');
+            const horarioAlvo = `${horaFutura}:${minutoFuturo}`;
+
+            if (gradeDoDia.includes(horarioAlvo) && ultimoAlertaNotificado !== horarioAlvo) {
+                if (Notification.permission === "granted") {
+                    new Notification("⏰ Atenção, Professor!", {
+                        body: `Falta 1 minuto para o fim da aula/intervalo das ${horarioAlvo}.`,
+                        icon: "icon-192.png", 
+                        vibrate: [1000, 500, 1000, 500, 1000]
+                    });
+                }
+                ultimoAlertaNotificado = horarioAlvo; 
+            }
+        }, 10000); 
+    };
+
+    const pararMonitoramento = () => {
+        if (relogioMonitoramento) {
+            clearInterval(relogioMonitoramento);
+            relogioMonitoramento = null;
+        }
+    };
+
+    // O cérebro do Botão Liga/Desliga
+    btnAlarmes.addEventListener('click', () => {
+        if (!alarmesAtivos) {
+            // AÇÃO: TENTAR LIGAR OS ALARMES
+            if (!("Notification" in window)) {
+                alert("Seu navegador não suporta notificações nativas.");
+                return;
+            }
+            Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    alarmesAtivos = true;
+                    localStorage.setItem('alarmesAtivos', 'true');
+                    atualizarVisualDoBotao();
+                    iniciarMonitoramentoInteligente();
+                    alert("✅ Alarmes ATIVADOS! O celular vibrará 1 minuto antes nas Quartas e Sextas.");
+                } else {
+                    alert("Você precisa permitir as notificações no navegador para ligar os alarmes.");
+                }
+            });
+        } else {
+            // AÇÃO: DESLIGAR OS ALARMES
+            alarmesAtivos = false;
+            localStorage.setItem('alarmesAtivos', 'false');
+            atualizarVisualDoBotao();
+            pararMonitoramento();
+            alert("❌ Alarmes DESATIVADOS.");
+        }
+    });
+
+    // Ao abrir o aplicativo, ajusta o botão visualmente
+    atualizarVisualDoBotao();
+    
+    // Se você tinha deixado ligado na última vez que usou, ele liga automaticamente de novo
+    if (alarmesAtivos && Notification.permission === "granted") {
+        iniciarMonitoramentoInteligente();
+    }
+
+</script>
 </body>
 </html>
