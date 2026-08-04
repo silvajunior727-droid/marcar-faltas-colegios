@@ -1252,17 +1252,28 @@ document.addEventListener('DOMContentLoaded', () => {
             relatorioHTML += `</div>`; // Fecha a div do bloco diário
         }
 
-        tempDiv.innerHTML = relatorioHTML;
+tempDiv.innerHTML = relatorioHTML;
+        
+        // CORREÇÃO 1: Limpa qualquer tabela de impressão anterior presa na memória
+        const tabelaAntiga = document.getElementById('tabela-impressao-temp');
+        if (tabelaAntiga) {
+            document.body.removeChild(tabelaAntiga);
+        }
+
         document.body.appendChild(tempDiv);
         
         window.print();
         
+        // CORREÇÃO 2: Aumentamos o tempo de meio segundo (500) para 2 minutos (120000).
+        // Isso dá tempo de sobra para o Android gerar o PDF e salvar na pasta sem pressa!
         setTimeout(() => {
-            if (document.body.contains(tempDiv)) {
-                document.body.removeChild(tempDiv);
+            const tabelaAtual = document.getElementById('tabela-impressao-temp');
+            if (tabelaAtual) {
+                document.body.removeChild(tabelaAtual);
             }
-            dom.presencaStatus.textContent = "✅ Impressão do Relatório GERAL solicitada. Verifique o destino do PDF.";
-        }, 500); 
+        }, 120000); 
+        
+        dom.presencaStatus.textContent = "✅ Impressão solicitada com sucesso. Salve o PDF!";
     };
 
 
@@ -1297,7 +1308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     dom.settingSaveHorarioBtn.addEventListener('click', () => {
-        saveHorario(dom.settingColegio.value, dom.settingTurma.value, dom.settingHorario.value);
+        saveHorario(dom.settingColegio.value, dom.settingTurma.value, dom.settingHorario.value);     
     });
     
     dom.presencaColegio.addEventListener('change', () => {
