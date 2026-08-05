@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
-
-
-<!-- CONFIGURAÇÕES DE PWA E ÍCONES PARA O APLICATIVO -->
+    <!-- CONFIGURAÇÕES DE PWA E ÍCONES PARA O APLICATIVO -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7abaf2">
     <meta name="mobile-web-app-capable" content="yes">
@@ -13,8 +11,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Presença">
     <link rel="apple-touch-icon" href="icon-192.png">
-
-
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,15 +81,15 @@
             display: inline-block; 
         }
 
-/* Formulário e Combos */
+        /* Formulário e Combos */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-field { display: flex; flex-direction: column; }
         label { margin-bottom: 8px; font-weight: 600; font-size: 0.9em; }
-input[type="text"], input[type="tel"], input[type="date"], select { 
+        input[type="text"], input[type="tel"], input[type="date"], select { 
             width: 100%;
             box-sizing: border-box;
             padding: 12px; 
-            border: 1px solid #999999; /* Borda cinza forte e bem definida */
+            border: 1px solid #999999; 
             border-radius: 8px; 
             font-size: 1em; 
             font-family: 'Poppins', sans-serif; 
@@ -103,164 +99,57 @@ input[type="text"], input[type="tel"], input[type="date"], select {
         }
         
         /* ESTILO PARA INPUTS READ-ONLY E TURMAS DESABILITADAS */
-        input:read-only { 
-            background-color: var(--c-input-readonly-bg); 
-            color: var(--c-text);
-        }
-        .turma-disabled { 
-            background-color: var(--c-input-readonly-bg); 
-            color: var(--c-text-gray); 
-            cursor: not-allowed; 
-        }
+        input:read-only { background-color: var(--c-input-readonly-bg); color: var(--c-text); }
+        .turma-disabled { background-color: var(--c-input-readonly-bg); color: var(--c-text-gray); cursor: not-allowed; }
 
         /* Estilo para agrupar Horário e Botão de Salvar */
-        .horario-group { 
-            display: flex; 
-            gap: 10px; 
-            align-items: flex-end;
-        }
-        .horario-group input { 
-            flex-grow: 1; 
-            margin-bottom: 0;
-        }
+        .horario-group { display: flex; gap: 10px; align-items: flex-end; }
+        .horario-group input { flex-grow: 1; margin-bottom: 0; }
         .horario-group button {
-            padding: 12px 15px;
-            font-size: 0.9em;
-            background-color: var(--c-primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            white-space: nowrap;
-            transition: background-color 0.2s;
+            padding: 12px 15px; font-size: 0.9em; background-color: var(--c-primary);
+            color: white; border: none; border-radius: 8px; cursor: pointer;
+            font-weight: 600; white-space: nowrap; transition: background-color 0.2s;
         }
-        .horario-group button:hover {
-            background-color: #3a75b8;
-        }
+        .horario-group button:hover { background-color: #3a75b8; }
         
         /* Tabela de Presença */
-        .table-wrapper {
-            overflow-x: auto; 
-            margin-top: 20px;
-        }
-        table { 
-            width: 100%; 
-            min-width: 100%; 
-            border-collapse: separate; 
-            border-spacing: 0; 
-            border-radius: 8px; 
-            overflow: hidden; 
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
-        }
-        th, td { 
-            padding: 12px 15px; 
-            border-bottom: 1px solid var(--c-border); 
-            text-align: left;
-            background-color: var(--c-card);
-            transition: background-color 0.3s; 
-        }
-        th { 
-            background-color: var(--c-primary); 
-            color: #333; 
-            font-weight: 700; 
-            text-align: center; 
-        }
+        .table-wrapper { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; min-width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
+        th, td { padding: 12px 15px; border-bottom: 1px solid var(--c-border); text-align: left; background-color: var(--c-card); transition: background-color 0.3s; }
+        th { background-color: var(--c-primary); color: #333; font-weight: 700; text-align: center; }
         
         /* --- NOVOS ESTILOS: CAIXAS DE SELEÇÃO E OBSERVAÇÕES --- */
         .check-cell { text-align: center; vertical-align: middle; }
-        
-        /* Aumentando as caixinhas para facilitar o clique */
-        .check-cell input[type="checkbox"] { 
-            transform: scale(1.6); 
-            cursor: pointer; 
-            margin: 0;
-        }
-        
-        /* Cores: Verde claro para presença, Salmão para ocorrências */
+        .check-cell input[type="checkbox"] { transform: scale(1.6); cursor: pointer; margin: 0; }
         .check-presenca { accent-color: lightgreen; }
         .check-ocorrencia { accent-color: salmon; }
         
-        /* Linha oculta para a caixa de observação */
-        .obs-row {
-            display: none;
-            background-color: var(--c-bg);
-        }
-        .obs-row.active {
-            display: table-row;
-        }
+        .obs-row { display: none; background-color: var(--c-bg); }
+        .obs-row.active { display: table-row; }
         .obs-textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px dashed var(--c-primary);
-            border-radius: 6px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9em;
-            resize: vertical;
-            min-height: 45px;
-            box-sizing: border-box;
-            background-color: var(--c-card);
-            color: var(--c-text);
+            width: 100%; padding: 8px 12px; border: 1px dashed var(--c-primary); border-radius: 6px;
+            font-family: 'Poppins', sans-serif; font-size: 0.9em; resize: vertical; min-height: 45px;
+            box-sizing: border-box; background-color: var(--c-card); color: var(--c-text);
         }
-        /* ------------------------------------------------------ */
 
         /* Estilos de Botões */
         .button-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn-primary { 
             background-color: var(--c-primary); color: white; padding: 10px; 
-            border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
-            transition: background-color 0.2s;
+            border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background-color 0.2s;
         }
         .btn-primary:hover { background-color: #3a75b8; }
-        .btn-full-width {
-            width: 100%; margin-top: 10px; font-size: 1em; padding: 12px;
-        }
-        .btn-warning { 
-            background-color: var(--c-warning-bg); 
-            color: #333; 
-        }
-        .btn-warning:hover { filter: brightness(0.9); }
-        .btn-info { 
-            background-color: var(--c-info-bg); 
-            color: #333; 
-        }
-        .btn-info:hover { filter: brightness(0.9); }
-        #send-full-report-btn { color: #333; }
-        #clear-full-report-btn { color: #333; }
-        
-        #scroll-to-top-btn {
-            background-color: #6c757d; 
-            color: black !important;
-        }
-        #scroll-to-top-btn:hover { background-color: #5a6268; }
+        .btn-full-width { width: 100%; margin-top: 10px; font-size: 1em; padding: 12px; }
         
         #presenca-status { margin-top: 15px; color: var(--c-danger-text); text-align: center; font-weight: 600; }   
 
-        .utility-buttons {
-            display: flex;
-            gap: 10px;
-            float: right;
-            margin-top: -10px;
-        }
-        .utility-buttons button {
-            font-size: 1.2em; 
-            padding: 10px 15px; 
-            min-width: 80px; 
-            box-sizing: border-box;
-        }
-        
-        #toggle-dark-mode {
-            background-color: #6c757d; 
-            color: white; 
-        }
-
-/* AJUSTES PARA DISPOSITIVOS MÓVEIS */
+        /* AJUSTES PARA DISPOSITIVOS MÓVEIS */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .card { padding: 15px; }
             h1 { font-size: 1.5em; margin-top: 10px; margin-bottom: 10px; }
             h2 { margin-top: 15px; }
-            .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; } /* Layout 2 e 2 */
+            .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; } 
             .form-field input[type="text"], .form-field input[type="date"], .form-field select { padding: 10px; }
             .utility-buttons { margin-top: 0; float: none; justify-content: space-between; width: 100%; margin-bottom: 10px; }
             .utility-buttons button { flex-grow: 1; min-width: auto; }
@@ -270,272 +159,197 @@ input[type="text"], input[type="tel"], input[type="date"], select {
             th, td { padding: 8px 5px; font-size: 0.8em; white-space: normal; }
             th:nth-child(1), td:nth-child(1) { width: auto; font-size: 0.85em; }
             .check-cell { padding: 8px 5px; }
-            /* No celular a caixa fica um pouquinho menor para caber todas as opções lado a lado */
             .check-cell input[type="checkbox"] { transform: scale(1.4); } 
         }
 
+        @page { size: auto; margin: 8mm; }
 
-
-
-@page {
-            size: auto;
-            margin: 8mm;
-        }
-
-        /* ESTILOS DE IMPRESSÃO BLOQUEADOS POR DIA */
+/* ESTILOS DE IMPRESSÃO BLOQUEADOS POR DIA */
         @media print {
-            body, html {
-                margin: 0 !important;
-                padding: 0 !important;
-                background-color: white !important;
-            }
-            body * { 
-                visibility: hidden !important; 
-            }
-            #tabela-impressao-temp, 
-            #tabela-impressao-temp * { 
-                visibility: visible !important; 
-            }
+            body, html { margin: 0 !important; padding: 0 !important; background-color: white !important; }
+            
+            /* O PULO DO GATO: "display: none" faz o app sumir sem deixar buracos invisíveis */
+            .container { display: none !important; }
+            
             #tabela-impressao-temp { 
-                position: absolute !important; 
-                left: 0 !important; 
-                top: 0 !important; 
-                width: 100% !important;
+                display: block !important; 
+                position: relative !important; 
+                width: 100% !important; 
                 margin: 0 !important; 
                 padding: 0 !important; 
                 background-color: white !important; 
                 color: #000 !important;
             }
-            /* IMPEDE QUE O BLOCO DE UM DIA SEJA QUEBRADO ENTRE PÁGINAS */
-            .print-day-block {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                margin-bottom: 12px !important;
-            }
-            .print-table-content { 
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin-top: 4px !important; 
-                margin-bottom: 6px !important; 
-            }
-            .print-table-content th { 
-                background-color: #f0f0f0 !important; 
-                color: #000 !important; 
-                font-weight: bold; 
-                border: 1px solid #000 !important; 
-                padding: 5px 8px !important; 
-                text-align: left; 
-            }
-            .print-table-content td { 
-                border: 1px solid #ccc !important; 
-                border-top: none !important; 
-                border-bottom: none !important; 
-                padding: 4px 8px !important; 
-                background-color: #fff !important; 
-                color: #000 !important;
-            }
-            .print-table-content tr:last-child td { 
-                border-bottom: 1px solid #000 !important; 
-            }
-            #tabela-impressao-temp h1 { 
-                font-size: 1.3em !important; 
-                border-bottom: 2px solid #000 !important; 
-                padding-bottom: 4px !important; 
-                margin-bottom: 4px !important; 
-                color: #000 !important; 
-                text-align: center; 
-            }
-            #tabela-impressao-temp h2 { 
-                font-size: 0.9em !important; 
-                padding: 0 !important; 
-                margin-bottom: 10px !important; 
-                text-align: center; 
-                font-weight: normal; 
-                border-bottom: 1px solid #999 !important; 
-                padding-bottom: 3px !important; 
-            }
-            #tabela-impressao-temp h3 { 
-                font-size: 1em !important; 
-                margin-top: 6px !important; 
-                margin-bottom: 3px !important; 
-                font-weight: bold; 
-                color: #000 !important; 
-                border-bottom: 1px dashed #ccc !important; 
-                padding-bottom: 2px !important; 
-            }
+            .print-day-block { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 12px !important; }
+            .print-table-content { width: 100% !important; border-collapse: collapse !important; margin-top: 4px !important; margin-bottom: 6px !important; }
+            .print-table-content th { background-color: #f0f0f0 !important; color: #000 !important; font-weight: bold; border: 1px solid #000 !important; padding: 5px 8px !important; text-align: left; }
+            .print-table-content td { border: 1px solid #ccc !important; border-top: none !important; border-bottom: none !important; padding: 4px 8px !important; background-color: #fff !important; color: #000 !important; }
+            .print-table-content tr:last-child td { border-bottom: 1px solid #000 !important; }
+            #tabela-impressao-temp h1 { font-size: 1.3em !important; border-bottom: 2px solid #000 !important; padding-bottom: 4px !important; margin-bottom: 4px !important; color: #000 !important; text-align: center; }
+            #tabela-impressao-temp h2 { font-size: 0.9em !important; padding: 0 !important; margin-bottom: 10px !important; text-align: center; font-weight: normal; border-bottom: 1px solid #999 !important; padding-bottom: 3px !important; }
+            #tabela-impressao-temp h3 { font-size: 1em !important; margin-top: 6px !important; margin-bottom: 3px !important; font-weight: bold; color: #000 !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 2px !important; }
         }
-
 
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>📚 Sistema de Registro de Presença 2026</h1>
-        <p style="text-align: center; font-weight: 600; margin-top: -5px; margin-bottom: 25px; color: var(--c-primary);"></p>
-        
-        <div class="card">
-            <div class="utility-buttons">
-                <button id="toggle-dark-mode" class="btn-primary">
-                    🌙
-                </button>
-                <button id="toggle-settings-btn" class="btn-primary">
-                    ⚙️
-                </button>
-<button id="btn-ativar-alarmes" title="Ligar/Desligar Alarmes" style="background-color: #e0e0e0; color: #333; border: none; border-radius: 8px; font-size: 1.3em; cursor: pointer; transition: background-color 0.3s;">
-    🔕
-</button>
+<div class="container">
+    <h1>📚 Sistema de Registro de Presença 2026</h1>
+    <p style="text-align: center; font-weight: 600; margin-top: -5px; margin-bottom: 25px; color: var(--c-primary);">  
+
+    </p>
+    
+    <div class="card">
+       <div class="utility-buttons" style="display: flex; gap: 10px; align-items: center; justify-content: flex-start; margin-bottom: 15px;">
+            <button id="toggle-dark-mode" class="btn-primary" title="Modo Claro/Escuro">🌙</button>
+            <button id="toggle-settings-btn" class="btn-primary" title="Configurações">⚙️</button>
+            <button id="btn-ativar-alarmes" class="btn-primary" title="Ligar/Desligar Alarmes" style="background-color: #e0e0e0; color: #333; border: none;">🔕</button>
+            <button id="btn-ver-grade" class="btn-primary" title="Ver Grade de Aulas" style="background-color: #e0e0e0; color: #333; border: none;">📅</button>
+        </div>
+
+        <h2>Configurações</h2>
+        <div id="settings-panel" style="display: none;">
+            <h3>📞 Número de WhatsApp:</h3>
+            <div class="form-grid">
+                <div class="form-field" style="grid-column: 1 / -1;">
+                    <input type="tel" id="setting-whatsapp" placeholder="Ex: 5511987654321 (apenas números)">
+                </div>
             </div>
-            <h2>Configurações</h2>
+            <div class="button-group">
+                <button class="btn-primary" id="save-settings-btn" style="flex-grow: 2;">Salvar Número</button>
+            </div>
+
+            <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">⏰ Configurar Horários</h3>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="setting-colegio">Colégio:</label>
+                    <select id="setting-colegio">
+                        <option value="">-- Escolha --</option>
+                        <option value="Colégio Objetivo">OBJETIVO</option>
+                        <option value="Colégio GP">GP</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="setting-turma">Turma:</label>
+                    <select id="setting-turma" class="turma-disabled" disabled>
+                        <option value="">Selecione Colégio</option>
+                    </select>
+                </div>
+                <div class="form-field" style="grid-column: 1 / -1;">
+                    <label for="setting-horario">Horário da Aula:</label>
+                    <div class="horario-group">
+                        <input type="text" id="setting-horario" placeholder="Ex: 14h00 às 15h30">
+                        <button type="button" id="setting-save-horario-btn" class="btn-primary">Salvar Horário</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- Fechamento correto do Card de Configurações -->
+
+    <div class="card" id="presenca-card">
+        <h2>Lançamento Diário</h2>
+        <form id="formPresenca">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="presenca-colegio">Colégio:</label>
+                    <select id="presenca-colegio" required>
+                        <option value="">-- Mudar Colégio --</option>
+                        <option value="Colégio Objetivo" selected>OBJETIVO</option>
+                        <option value="Colégio GP">GP</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="presenca-turma">Turma:</label>
+                    <select id="presenca-turma" class="turma-disabled" disabled required>
+                        <option value="">Selecione um Colégio primeiro</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label for="presenca-data">Data:</label>
+                    <input type="date" id="presenca-data" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="presenca-horario">Horário:</label>
+                    <input type="text" id="presenca-horario" readonly>
+                </div>
+                
+                <!-- SELETORES DE EXIBIÇÃO DA TABELA -->
+                <div class="form-field" style="grid-column: 1 / -1; margin-top: 10px;">
+                    <label>O que registrar hoje?</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px;">
+                        <label style="cursor: pointer; font-weight: 600;"><input type="checkbox" id="toggle-col-presenca" checked disabled> ✅ Presença</label>
+                        <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-apostila"> 📖 Apostila</label>
+                        <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-trabalho"> 📄 Trabalho</label>
+                        <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-obs"> 💬 Observação</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="table-wrapper"> 
+                <table id="tabela-presenca">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Nome do Aluno</th>
+                            <th class="col-presenca" style="text-align: center; cursor: pointer;" title="Marcar/Desmarcar Todos">
+                                <button type="button" id="btn-toggle-todos" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">✅</button>
+                            </th>
+                            <th class="col-extra col-apostila" style="display: none; text-align: center;" title="Marcar/Desmarcar Todos - Apostila">
+                                <button type="button" id="btn-toggle-apostila" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">📖</button>
+                            </th>
+                            <th class="col-extra col-trabalho" style="display: none; text-align: center;" title="Marcar/Desmarcar Todos - Trabalho">
+                                <button type="button" id="btn-toggle-trabalho" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">📄</button>
+                            </th>
+                            <th class="col-extra col-obs" style="display: none; text-align: center; font-size: 1.5em;" title="Adicionar Observação">💬</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaAlunos">
+                        <tr><td colspan="5" style="text-align: center;">Selecione um Colégio e uma Turma para carregar a lista de alunos.</td></tr>
+                    </tbody>
+                </table>
+            </div>
             
-            <div id="settings-panel" style="display: none;">
-                <h3>📞 Número de WhatsApp:</h3>
-                <div class="form-grid">
-                    <div class="form-field" style="grid-column: 1 / -1;">
-                        <input type="tel" id="setting-whatsapp" placeholder="Ex: 5511987654321 (apenas números)">
-                    </div>
-                </div>
-                <div class="button-group">
-                    <button class="btn-primary" id="save-settings-btn" style="flex-grow: 2;">Salvar Número</button>
-                </div>
+            <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral</h3>
+            
+            <button type="button" id="save-faltas-btn" class="btn-primary btn-full-width" style="background-color: #fff3cd; color: #333; box-shadow: 0 5px #e0a800; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #e0a800'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'">
+                💾 SALVAR FALTAS!
+            </button>
 
-                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">⏰ Configurar Horários</h3>
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="setting-colegio">Colégio:</label>
-                        <select id="setting-colegio">
-                            <option value="">-- Escolha --</option>
-                            <option value="Colégio Objetivo">OBJETIVO</option>
-                            <option value="Colégio GP">GP</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="setting-turma">Turma:</label>
-                        <select id="setting-turma" class="turma-disabled" disabled>
-                            <option value="">Selecione Colégio</option>
-                        </select>
-                    </div>
-                    <div class="form-field" style="grid-column: 1 / -1;">
-                        <label for="setting-horario">Horário da Aula:</label>
-                        <div class="horario-group">
-                            <input type="text" id="setting-horario" placeholder="Ex: 14h00 às 15h30">
-                            <button type="button" id="setting-save-horario-btn" class="btn-primary">Salvar Horário</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <button type="button" id="save-pdf-btn" class="btn-primary btn-full-width" style="background-color: #d4edda; color: #333; box-shadow: 0 5px #28a745; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #28a745'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #28a745'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #28a745'">
+                📄 IMPRIMIR RELATÓRIO!
+            </button>
+            
+            <button type="button" id="send-full-report-btn" class="btn-primary btn-full-width" style="background-color: #d1ecf1; color: #333; box-shadow: 0 5px #17a2b8; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #17a2b8'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #17a2b8'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #17a2b8'">
+                💬 ENVIAR RELATÓRIO!
+            </button>
 
-        <div class="card" id="presenca-card">
-            <h2>Lançamento Diário</h2>
-            <form id="formPresenca">
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="presenca-colegio">Colégio:</label>
-                        <select id="presenca-colegio" required>
-                            <option value="">-- Mudar Colégio --</option>
-                            <option value="Colégio Objetivo" selected>OBJETIVO</option>
-                            <option value="Colégio GP">GP</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="presenca-turma">Turma:</label>
-                        <select id="presenca-turma" class="turma-disabled" disabled required>
-                            <option value="">Selecione um Colégio primeiro</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-field">
-                        <label for="presenca-data">Data:</label>
-                        <input type="date" id="presenca-data" required>
-                    </div>
-                    
-<div class="form-field">
-                        <label for="presenca-horario">Horário:</label>
-                        <input type="text" id="presenca-horario" readonly>
-                    </div>
-                    
-                    <!-- NOVO: SELETORES DE EXIBIÇÃO DA TABELA -->
-                    <div class="form-field" style="grid-column: 1 / -1; margin-top: 10px;">
-                        <label>O que registrar hoje?</label>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px;">
-                            <label style="cursor: pointer; font-weight: 600;"><input type="checkbox" id="toggle-col-presenca" checked disabled> ✅ Presença</label>
-                            <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-apostila"> 📖 Apostila</label>
-                            <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-trabalho"> 📄 Trabalho</label>
-                            <label style="cursor: pointer;"><input type="checkbox" id="toggle-col-obs"> 💬 Observação</label>
-                        </div>
-                    </div>
-                </div>
-
-                <hr>
-                <div class="table-wrapper"> 
-                    <table id="tabela-presenca">
-                        <thead>
-                            <tr>
-                                <th style="width: 50%;">Nome do Aluno</th>
-                                
-                                <!-- COLUNA 1: PRESENÇA (Com botão Mestre) -->
-                                <th class="col-presenca" style="text-align: center; cursor: pointer;" title="Marcar/Desmarcar Todos">
-                                    <button type="button" id="btn-toggle-todos" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">✅</button>
-                                </th>
-                                
-			<!-- COLUNAS EXTRAS COM BOTÃO MESTRE -->
-                                <th class="col-extra col-apostila" style="display: none; text-align: center;" title="Marcar/Desmarcar Todos - Apostila">
-                                    <button type="button" id="btn-toggle-apostila" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">📖</button>
-                                </th>
-                                <th class="col-extra col-trabalho" style="display: none; text-align: center;" title="Marcar/Desmarcar Todos - Trabalho">
-                                    <button type="button" id="btn-toggle-trabalho" style="border: none; background: transparent; cursor: pointer; font-size: 1.3em;">📄</button>
-                                </th>
-                                <th class="col-extra col-obs" style="display: none; text-align: center; font-size: 1.5em;" title="Adicionar Observação">💬</th>
-                            </tr>
-                        </thead>
-                        <tbody id="listaAlunos">
-                            <tr><td colspan="5" style="text-align: center;">Selecione um Colégio e uma Turma para carregar a lista de alunos.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <h3 style="margin-top: 25px; border-top: 1px solid var(--c-border); padding-top: 20px;">🗓️ Relatório Geral</h3>
-                
-<button type="button" id="save-faltas-btn" class="btn-primary btn-full-width" style="background-color: #fff3cd; color: #333; box-shadow: 0 5px #e0a800; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #e0a800'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #e0a800'">
-                    💾 SALVAR FALTAS!
-                </button>
-
-                <button type="button" id="save-pdf-btn" class="btn-primary btn-full-width" style="background-color: #d4edda; color: #333; box-shadow: 0 5px #28a745; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #28a745'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #28a745'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #28a745'">
-                    📄 IMPRIMIR RELATÓRIO!
-                </button>
-                
-                <button type="button" id="send-full-report-btn" class="btn-primary btn-full-width" style="background-color: #d1ecf1; color: #333; box-shadow: 0 5px #17a2b8; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #17a2b8'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #17a2b8'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #17a2b8'">
-                    💬 ENVIAR RELATÓRIO!
-                </button>
-
-                <button type="button" id="clear-full-report-btn" class="btn-primary btn-full-width" style="background-color: #f8d7da; color: #333; box-shadow: 0 5px #dc3545; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #dc3545'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #dc3545'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #dc3545'">
-                    🗑️ LIMPAR HISTÓRICO!
-                </button>
-                
-                <button type="button" id="scroll-to-top-btn" class="btn-primary btn-full-width" style="background-color: #e2e3e5; color: #333; box-shadow: 0 5px #6c757d; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #6c757d'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #6c757d'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #6c757d'">
-                    ⬆️ VOLTAR AO TOPO!
-                </button>
-                
-                <p id="presenca-status"></p>
-            </form>
-        </div>
+            <button type="button" id="clear-full-report-btn" class="btn-primary btn-full-width" style="background-color: #f8d7da; color: #333; box-shadow: 0 5px #dc3545; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #dc3545'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #dc3545'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #dc3545'">
+                🗑️ LIMPAR HISTÓRICO!
+            </button>
+            
+            <button type="button" id="scroll-to-top-btn" class="btn-primary btn-full-width" style="background-color: #e2e3e5; color: #333; box-shadow: 0 5px #6c757d; border: none; transition: transform 0.1s, box-shadow 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 1px #6c757d'" onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #6c757d'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px #6c757d'">
+                ⬆️ VOLTAR AO TOPO!
+            </button>
+            
+            <p id="presenca-status"></p>
+        </form>
     </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- NOVO ALERTA CUSTOMIZADO (SEM MOSTRAR O GITHUB) ---
+    // --- NOVO ALERTA CUSTOMIZADO ---
     setTimeout(function() {
-        // Criação da janela de fundo escuro
         const modal = document.createElement('div');
         modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:9999;";
         
-        // Criação da caixinha de aviso com suporte ao seu Modo Escuro/Claro
         const box = document.createElement('div');
         box.style.cssText = "background:var(--c-card); color:var(--c-text); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); width: 85%; max-width: 320px; font-family: 'Poppins', sans-serif;";
         
-        // Conteúdo, ícones e botões no estilo 3D da sua aplicação
         box.innerHTML = `
             <h3 style="margin-top: 0; font-size: 1.2em;">⚠️ Atenção</h3>
             <p style="margin-bottom: 20px; font-size: 0.95em;">Deseja apagar todo o histórico?</p>
@@ -548,23 +362,19 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.appendChild(box);
         document.body.appendChild(modal);
 
-        // Ação do Botão Cancelar (Apenas fecha a janela)
         document.getElementById('modal-btn-cancel').onclick = () => {
             document.body.removeChild(modal);
         };
         
-        // Ação do Botão Apagar (Remove os dados e mostra o aviso de sucesso)
         document.getElementById('modal-btn-confirm').onclick = () => {
             localStorage.removeItem('registroDeFaltas');
             document.body.removeChild(modal);
             
-            // Aviso de sucesso estilo "Notificação" flutuante (substitui o 'alert' nativo)
             const success = document.createElement('div');
             success.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:lightgreen; color:#333; padding:12px 24px; border-radius:8px; font-weight:bold; box-shadow:0 4px #78c878; z-index:9999; font-family: 'Poppins', sans-serif;";
             success.innerHTML = "✅ Histórico apagado!";
             document.body.appendChild(success);
             
-            // O aviso de sucesso some sozinho após 2 segundos e meio
             setTimeout(() => document.body.removeChild(success), 2500);
         };
     }, 100);
@@ -763,7 +573,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // --- FUNÇÃO ATUALIZADA: CARREGAR ALUNOS E MONTAR AS NOVAS COLUNAS ---
     const carregarAlunos = (colegio, turma) => {
         const key = `${colegio}|${turma}`;
         const alunos = listasDeAlunos[key];
@@ -776,7 +585,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         alunos.forEach(nomeAluno => {
-            // Linha principal (Aluno + Caixinhas)
             const row = document.createElement('tr');
             row.setAttribute('data-aluno', nomeAluno);
             
@@ -797,7 +605,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tbody.appendChild(row);
 
-            // Linha da observação (escondida logo abaixo)
             const obsRow = document.createElement('tr');
             obsRow.className = 'obs-row';
             obsRow.innerHTML = `
@@ -807,14 +614,13 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tbody.appendChild(obsRow);
 
-            // Gatilho: Abrir/Fechar a caixa de observação
             const checkObs = row.querySelector('.checkbox-obs-toggle');
             checkObs.addEventListener('change', (e) => {
                 if(e.target.checked) {
                     obsRow.classList.add('active');
                 } else {
                     obsRow.classList.remove('active');
-                    obsRow.querySelector('.obs-textarea').value = ''; // Limpa se fechar
+                    obsRow.querySelector('.obs-textarea').value = ''; 
                 }
             });
         });
@@ -822,7 +628,6 @@ document.addEventListener('DOMContentLoaded', () => {
         atualizarColunasVisiveis();
     };
 
-// --- NOVA LÓGICA: FILTROS E BOTÕES MESTRES ---
     const atualizarColunasVisiveis = () => {
         const showApostila = document.getElementById('toggle-col-apostila').checked;
         const showTrabalho = document.getElementById('toggle-col-trabalho').checked;
@@ -837,25 +642,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('toggle-col-trabalho').addEventListener('change', atualizarColunasVisiveis);
     document.getElementById('toggle-col-obs').addEventListener('change', atualizarColunasVisiveis);
 
-    // Botão Mestre Presença
     const btnToggleTodos = document.getElementById('btn-toggle-todos');
     if (btnToggleTodos) {
         btnToggleTodos.dataset.status = 'todos'; 
         btnToggleTodos.addEventListener('click', () => {
             const checkboxes = document.querySelectorAll('.checkbox-presenca-aluno');
             if (btnToggleTodos.dataset.status === 'todos') {
-                checkboxes.forEach(cb => cb.checked = false); // Desmarca tudo (Faltaram)
+                checkboxes.forEach(cb => cb.checked = false); 
                 btnToggleTodos.dataset.status = 'nenhum';
                 btnToggleTodos.textContent = '❌';
             } else {
-                checkboxes.forEach(cb => cb.checked = true); // Marca tudo (Presentes)
+                checkboxes.forEach(cb => cb.checked = true); 
                 btnToggleTodos.dataset.status = 'todos';
                 btnToggleTodos.textContent = '✅';
             }
         });
     }
 
-    // Botão Mestre Apostila
     const btnToggleApostila = document.getElementById('btn-toggle-apostila');
     if (btnToggleApostila) {
         btnToggleApostila.dataset.status = 'nenhum';
@@ -871,7 +674,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Botão Mestre Trabalho
     const btnToggleTrabalho = document.getElementById('btn-toggle-trabalho');
     if (btnToggleTrabalho) {
         btnToggleTrabalho.dataset.status = 'nenhum';
@@ -887,7 +689,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- FUNÇÃO ATUALIZADA: LIMPAR FORMULÁRIO DEPOIS DE SALVAR ---
     const resetFormulario = () => {
         document.querySelectorAll('.checkbox-presenca-aluno').forEach(cb => cb.checked = true);
         document.querySelectorAll('.check-ocorrencia').forEach(cb => cb.checked = false);
@@ -900,7 +701,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // --- FUNÇÃO ATUALIZADA: PROCESSAR FALTAS E OCORRÊNCIAS ---
     const processarFaltas = () => {
         const colegio = dom.presencaColegio.value;
         const turma = dom.presencaTurma.value;
@@ -917,7 +717,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let presentes = 0;
         let faltas = []; 
-        let ocorrencias = []; // Nova lista para guardar apostila, trabalho, obs
+        let ocorrencias = []; 
         let faltasDestaSessao = []; 
 
         const alunosRows = dom.listaAlunos.querySelectorAll('tr[data-aluno]');
@@ -935,7 +735,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const textarea = row.nextElementSibling.querySelector('.obs-textarea');
             
-            // 1. Checa Presença
             if (checkPresenca && checkPresenca.checked) {
                 presentes++;
             } else {
@@ -943,7 +742,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 faltasDestaSessao.push({ data: data, colegio: colegio, turma: turma, aluno: nomeAluno }); 
             }
 
-            // 2. Checa Ocorrências
             if (checkApostila && checkApostila.checked) {
                 ocorrencias.push({ aluno: nomeAluno, tipo: 'Sem Apostila' });
             }
@@ -958,14 +756,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return { status: 'success', colegio, turma, data, horario, presentes, faltas, ocorrencias, faltasDestaSessao };
     };
 
-// --- FUNÇÃO ATUALIZADA: PERSISTIR TODAS AS OCORRÊNCIAS NO HISTÓRICO ---
     const persistirFaltas = (dataSession) => {
         let registrosGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
         const { colegio, turma, data } = dataSession;
 
         const sessionKey = `${data}|${colegio}|${turma}`;
 
-        // Remove registros antigos desta mesma sessão para evitar duplicidade
         registrosGerais = registrosGerais.filter(f => {
             const fKey = `${f.data}|${f.colegio}|${f.turma}`;
             return fKey !== sessionKey;
@@ -982,22 +778,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkObs = row.querySelector('.checkbox-obs-toggle');
             const textarea = row.nextElementSibling.querySelector('.obs-textarea');
 
-            // Falta
             if (checkPresenca && !checkPresenca.checked) {
                 registrosGerais.push({ data, colegio, turma, tipo: 'Falta', aluno: nomeAluno });
                 temRegistros = true;
             }
-            // Apostila
             if (checkApostila && checkApostila.checked) {
                 registrosGerais.push({ data, colegio, turma, tipo: 'Apostila', aluno: nomeAluno });
                 temRegistros = true;
             }
-            // Trabalho
             if (checkTrabalho && checkTrabalho.checked) {
                 registrosGerais.push({ data, colegio, turma, tipo: 'Trabalho', aluno: nomeAluno });
                 temRegistros = true;
             }
-            // Observação
             if (checkObs && checkObs.checked && textarea.value.trim() !== '') {
                 registrosGerais.push({ data, colegio, turma, tipo: 'Obs', aluno: nomeAluno, texto: textarea.value.trim() });
                 temRegistros = true;
@@ -1010,7 +802,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         localStorage.setItem('registroDeFaltas', JSON.stringify(registrosGerais));
     };
-
 
     const apenasSalvarFaltas = () => {
         const data = processarFaltas();
@@ -1033,7 +824,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.presencaStatus.textContent = "✅ Presença registrada no histórico com sucesso!";
     };
 
-    // --- FUNÇÃO ATUALIZADA: GERAR RELATÓRIO COM AS OCORRÊNCIAS ---
     const gerarRelatorioPresenca = (e) => {
         e.preventDefault();
         const data = processarFaltas();
@@ -1071,7 +861,6 @@ document.addEventListener('DOMContentLoaded', () => {
             relatorio += `- 100% de Presença registrada. Nenhuma falta.\n`;
         }
         
-        // ADICIONA AS OCORRÊNCIAS NO RELATÓRIO DE WHATSAPP
         if (data.ocorrencias && data.ocorrencias.length > 0) {
             relatorio += `\n*⚠️ OCORRÊNCIAS REGISTRADAS:*\n`;
             data.ocorrencias.forEach(oc => {
@@ -1093,10 +882,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.presencaStatus.textContent = "✅ Relatório DIÁRIO enviado. Presença salva.";
     };
     
-    
-
-
-// --- FUNÇÃO ATUALIZADA: RELATÓRIO GERAL NO WHATSAPP COM TODAS AS OCORRÊNCIAS ---
     const enviarRelatorioGeral = (silentMode = false) => {
         if (!state.whatsappNumber || state.whatsappNumber.length < 8) {
             if (!silentMode) { 
@@ -1164,9 +949,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(whatsappLinkGeral, '_blank');
     };
 
-
-
-
    const limparRelatorioGeral = () => {
         if (confirm('Tem certeza que deseja apagar PERMANENTEMENTE todo o histórico? Esta ação não pode ser desfeita.')) {
             localStorage.removeItem('registroDeFaltas');
@@ -1174,8 +956,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-
-   // --- FUNÇÃO CORRIGIDA: IMPRESSÃO LIMPA SEM FOLHAS EM BRANCO ---
     const imprimirRelatorioGeral = () => {
         let registrosGerais = JSON.parse(localStorage.getItem('registroDeFaltas')) || [];
         
@@ -1199,13 +979,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let relatorioHTML = ``;
         
-        // Cabeçalho geral no topo da impressão
         relatorioHTML += `<div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 15px;">`;
         relatorioHTML += `<h1 style="font-size: 1.4em; margin-bottom: 2px; color: #000 !important;">HISTÓRICO GERAL DE OCORRÊNCIAS E PRESENÇA</h1>`;
         relatorioHTML += `<h2 style="font-size: 0.85em; font-weight: normal; color: #333 !important; margin: 0;">Relatório gerado em ${new Date().toLocaleString('pt-BR')}</h2>`;
         relatorioHTML += `</div>`;
         
-        // Loop por cada dia/sessão encapsulado na div de proteção contra quebras
         for (const key in sessoesAgrupadas) {
             const [data, info] = key.split(' | ');
 
@@ -1252,12 +1030,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     relatorioHTML += `</tbody></table>`;
                 }
             }
-            relatorioHTML += `</div>`; // Fecha a div do bloco diário
+            relatorioHTML += `</div>`; 
         }
 
-tempDiv.innerHTML = relatorioHTML;
+        tempDiv.innerHTML = relatorioHTML;
         
-        // CORREÇÃO 1: Limpa qualquer tabela de impressão anterior presa na memória
         const tabelaAntiga = document.getElementById('tabela-impressao-temp');
         if (tabelaAntiga) {
             document.body.removeChild(tabelaAntiga);
@@ -1267,8 +1044,6 @@ tempDiv.innerHTML = relatorioHTML;
         
         window.print();
         
-        // CORREÇÃO 2: Aumentamos o tempo de meio segundo (500) para 2 minutos (120000).
-        // Isso dá tempo de sobra para o Android gerar o PDF e salvar na pasta sem pressa!
         setTimeout(() => {
             const tabelaAtual = document.getElementById('tabela-impressao-temp');
             if (tabelaAtual) {
@@ -1279,12 +1054,8 @@ tempDiv.innerHTML = relatorioHTML;
         dom.presencaStatus.textContent = "✅ Impressão solicitada com sucesso. PDF Salvo!";
     };
 
-
     const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     dom.settingWhatsapp.value = state.whatsappNumber;
@@ -1350,30 +1121,23 @@ tempDiv.innerHTML = relatorioHTML;
         campoData.value = `${ano}-${mes}-${dia}`;
     }
 
-});
-
-
-
-// --- SISTEMA INTELIGENTE DE NOTIFICAÇÕES (LIGA/DESLIGA NO MESMO BOTÃO) ---
-    
+    // --- SISTEMA INTELIGENTE DE NOTIFICAÇÕES ---
     const finaisDeAulaQuarta = ["07:55", "08:45", "10:20", "11:10", "12:00", "13:50", "14:40", "15:00", "15:50"];
     const finaisDeAulaSexta = ["07:55", "08:45", "09:35", "09:55", "10:45", "11:35", "12:25", "13:55", "14:45", "15:05", "15:55", "16:45", "17:35"];
 
     let ultimoAlertaNotificado = "";
-    let relogioMonitoramento = null; // Variável que guarda o motor do nosso relógio
+    let relogioMonitoramento = null; 
     const btnAlarmes = document.getElementById('btn-ativar-alarmes');
     
-    // Recupera da memória se você havia deixado ligado ou desligado (padrão é desligado)
     let alarmesAtivos = localStorage.getItem('alarmesAtivos') === 'true';
 
-    // Função que muda a cor suave e o ícone do botão
     const atualizarVisualDoBotao = () => {
         if (alarmesAtivos) {
-            btnAlarmes.innerHTML = "🔔"; // Ícone Ligado
-            btnAlarmes.style.backgroundColor = "#c2e0c6"; // Verde super suave e pastel
+            btnAlarmes.innerHTML = "🔔"; 
+            btnAlarmes.style.backgroundColor = "#c2e0c6"; 
         } else {
-            btnAlarmes.innerHTML = "🔕"; // Ícone Desligado
-            btnAlarmes.style.backgroundColor = "#e0e0e0"; // Cinza claro neutro
+            btnAlarmes.innerHTML = "🔕"; 
+            btnAlarmes.style.backgroundColor = "#e0e0e0"; 
         }
     };
 
@@ -1385,7 +1149,6 @@ tempDiv.innerHTML = relatorioHTML;
         else if (diaDaSemana === 5) gradeDoDia = finaisDeAulaSexta;
         else return;
 
-        // Limpa qualquer relógio antigo rodando nos bastidores antes de ligar um novo
         if (relogioMonitoramento) clearInterval(relogioMonitoramento);
 
         relogioMonitoramento = setInterval(() => {
@@ -1416,10 +1179,8 @@ tempDiv.innerHTML = relatorioHTML;
         }
     };
 
-    // O cérebro do Botão Liga/Desliga
     btnAlarmes.addEventListener('click', () => {
         if (!alarmesAtivos) {
-            // AÇÃO: TENTAR LIGAR OS ALARMES
             if (!("Notification" in window)) {
                 alert("Seu navegador não suporta notificações nativas.");
                 return;
@@ -1436,7 +1197,6 @@ tempDiv.innerHTML = relatorioHTML;
                 }
             });
         } else {
-            // AÇÃO: DESLIGAR OS ALARMES
             alarmesAtivos = false;
             localStorage.setItem('alarmesAtivos', 'false');
             atualizarVisualDoBotao();
@@ -1445,13 +1205,107 @@ tempDiv.innerHTML = relatorioHTML;
         }
     });
 
-    // Ao abrir o aplicativo, ajusta o botão visualmente
     atualizarVisualDoBotao();
     
-    // Se você tinha deixado ligado na última vez que usou, ele liga automaticamente de novo
     if (alarmesAtivos && Notification.permission === "granted") {
         iniciarMonitoramentoInteligente();
     }
+
+// --- SISTEMA DE CONSULTA DE GRADE DE AULAS (DETALHADO) ---
+    document.getElementById('btn-ver-grade').addEventListener('click', () => {
+        const colegioSelecionado = document.getElementById('presenca-colegio').value;
+        
+        if (!colegioSelecionado || colegioSelecionado === "") {
+            alert("⚠️ Por favor, selecione um colégio na lista principal primeiro para ver a grade!");
+            return;
+        }
+
+        let titulo = "";
+        let tabelaHTML = "";
+
+        if (colegioSelecionado.includes("Objetivo")) {
+            titulo = "Grade - Colégio Objetivo";
+            tabelaHTML = `
+                <div style="max-height: 55vh; overflow-y: auto; padding-right: 5px;">
+                    <table style="width:100%; border-collapse: collapse; margin-top: 5px; font-size: 0.85em; text-align: center;">
+                        <!-- QUARTA-FEIRA -->
+                        <tr style="background: var(--c-primary); color: white;">
+                            <th colspan="2" style="padding: 8px; border: 1px solid var(--c-border); position: sticky; top: 0; z-index: 1;">QUARTA-FEIRA</th>
+                        </tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">07:05 às 07:55</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">9º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">07:55 às 08:45</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">5º ANO-A</td></tr>
+                        
+                        <!-- SEXTA-FEIRA -->
+                        <tr style="background: var(--c-primary); color: white;">
+                            <th colspan="2" style="padding: 8px; border: 1px solid var(--c-border); position: sticky; top: 0; z-index: 1;">SEXTA-FEIRA</th>
+                        </tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">07:05 às 07:55</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">8º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">07:55 às 08:45</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">3º MÉDIO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">08:45 às 09:35</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">7º ANO</td></tr>
+                        <tr style="background: rgba(255, 165, 0, 0.2);"><td colspan="2" style="padding: 4px; font-size: 0.8em; color: var(--c-text-gray);">INTERVALO (09:35 às 09:55)</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">09:55 às 10:45</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">6º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">10:45 às 11:35</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">2º MÉDIO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">11:35 às 12:25</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">1º MÉDIO</td></tr>
+                        <tr style="background: rgba(255, 165, 0, 0.2);"><td colspan="2" style="padding: 4px; font-size: 0.8em; color: var(--c-text-gray);">ALMOÇO (12:25 às 13:05)</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">13:05 às 13:55</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">3º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">13:55 às 14:45</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">5º ANO-B</td></tr>
+                        <tr style="background: rgba(255, 165, 0, 0.2);"><td colspan="2" style="padding: 4px; font-size: 0.8em; color: var(--c-text-gray);">INTERVALO (14:45 às 15:05)</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">15:05 às 15:55</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">1º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">15:55 às 16:45</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">4º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">16:45 às 17:35</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">2º ANO</td></tr>
+                    </table>
+                </div>
+            `;
+        } else if (colegioSelecionado.includes("GP")) {
+            titulo = "Grade - Colégio GP";
+            tabelaHTML = `
+                <div style="max-height: 55vh; overflow-y: auto; padding-right: 5px;">
+                    <table style="width:100%; border-collapse: collapse; margin-top: 5px; font-size: 0.85em; text-align: center;">
+                        <tr style="background: var(--c-secondary); color: #333;">
+                            <th colspan="2" style="padding: 8px; border: 1px solid var(--c-border); position: sticky; top: 0; z-index: 1;">QUARTA-FEIRA</th>
+                        </tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">09:30 às 10:20</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">3º ANO</td></tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid var(--c-border); vertical-align: middle;">10:20 às 11:10</td>
+                            <td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold; background-color: rgba(122, 186, 242, 0.1);">4º ANO-A<br><span style="font-size: 0.8em; font-weight: normal;">&</span><br>5º ANO</td>
+                        </tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">11:10 às 12:00</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">1º ANO-A</td></tr>
+                        <tr style="background: rgba(255, 165, 0, 0.2);"><td colspan="2" style="padding: 4px; font-size: 0.8em; color: var(--c-text-gray);">ALMOÇO (12:00 às 13:00)</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">13:00 às 13:50</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">2º ANO</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">13:50 às 14:40</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">4º ANO-B</td></tr>
+                        <tr style="background: rgba(255, 165, 0, 0.2);"><td colspan="2" style="padding: 4px; font-size: 0.8em; color: var(--c-text-gray);">INTERVALO (14:40 às 15:00)</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid var(--c-border);">15:00 às 15:50</td><td style="padding: 8px; border: 1px solid var(--c-border); font-weight: bold;">1º ANO-B</td></tr>
+                    </table>
+                </div>
+            `;
+        } else {
+            titulo = `Grade - ${colegioSelecionado}`;
+            tabelaHTML = `<p style="text-align:center; padding: 15px;">A grade deste colégio ainda não foi cadastrada.</p>`;
+        }
+
+        const modalGrade = document.createElement('div');
+        modalGrade.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:9999;";
+        
+        const boxGrade = document.createElement('div');
+        boxGrade.style.cssText = "background:var(--c-card); color:var(--c-text); padding:20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.3); width: 90%; max-width: 400px; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column;";
+        
+        boxGrade.innerHTML = `
+            <h3 style="margin-top: 0; font-size: 1.1em; text-align: center; border-bottom: 2px solid var(--c-border); padding-bottom: 10px; margin-bottom: 5px;">🗓️ ${titulo}</h3>
+            ${tabelaHTML}
+            <button id="modal-grade-fechar" style="width: 100%; margin-top: 15px; background: #e0e0e0; color: #333; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px #b0b0b0;">Fechar Tabela</button>
+        `;
+        
+        modalGrade.appendChild(boxGrade);
+        document.body.appendChild(modalGrade);
+
+        document.getElementById('modal-grade-fechar').onclick = () => {
+            document.body.removeChild(modalGrade);
+        };
+    });
+
+});
+
+
 
 </script>
 </body>
