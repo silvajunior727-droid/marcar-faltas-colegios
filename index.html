@@ -38,7 +38,7 @@
             --c-input-readonly-bg: #eee;
         }
 
-        /* VARIAVEIS PARA MODO ESCURO E CLARO */
+        /* VARIAVEIS PARA MODO ESCURO */
         html[data-theme="dark"] {
             --c-bg: #1e1e1e;
             --c-card: #2d2d2d;
@@ -1122,19 +1122,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
-// --- SISTEMA INTELIGENTE DE NOTIFICAÇÕES (COM SUPORTE A GP E OBJETIVO) ---
+// --- SISTEMA INTELIGENTE DE NOTIFICAÇÕES (VERSÃO ANDROID DEFINITIVA) ---
     
-    // Horários exatos de término das aulas mapeados para os dois colégios
     const finaisDeAulaQuartaObjetivo = ["07:55", "08:45"];
     const finaisDeAulaSextaObjetivo = ["07:55", "08:45", "09:35", "10:45", "11:35", "12:25", "13:55", "14:45", "15:55", "16:45", "17:35"];
-    
     const finaisDeAulaQuartaGP = ["10:20", "11:10", "12:00", "13:50", "14:40", "15:50"];
 
     let ultimoAlertaNotificado = "";
     let relogioMonitoramento = null; 
     const btnAlarmes = document.getElementById('btn-ativar-alarmes');
-    
     let alarmesAtivos = localStorage.getItem('alarmesAtivos') === 'true';
+
+    // 1. CONECTA O MOTOR DE SEGUNDO PLANO (A CHAVE PARA O ANDROID)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(() => console.log("Motor de fundo ativado!"));
+    }
 
     const atualizarVisualDoBotao = () => {
         if (alarmesAtivos) {
@@ -1146,41 +1148,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // 2. FUNÇÃO ESPECIAL QUE FURA O BLOQUEIO DO CELULAR
+    const dispararNotificacao = (titulo, mensagem) => {
+        navigator.serviceWorker.ready.then((registro) => {
+            registro.showNotification(titulo, {
+                body: mensagem,
+                icon: "icon-192.png",
+                vibrate: [1000, 500, 1000, 500, 1000], // Vibração longa
+                requireInteraction: true // Faz o balão ficar na tela até você tocar
+            });
+        });
+    };
+
     const iniciarMonitoramentoInteligente = () => {
-        const diaDaSemana = new Date().getDay(); // 3 = Quarta, 5 = Sexta
+        const diaDaSemana = new Date().getDay(); 
         const colegioAtual = document.getElementById('presenca-colegio').value;
         let gradeDoDia = [];
 
-        // Identifica a grade com base no dia e no colégio selecionado
         if (diaDaSemana === 3) {
             if (colegioAtual.includes("GP")) gradeDoDia = finaisDeAulaQuartaGP;
             else gradeDoDia = finaisDeAulaQuartaObjetivo;
         } else if (diaDaSemana === 5) {
-            gradeDoDia = finaisDeAulaSextaObjetivo; // Sexta é padrão Objetivo
-        } else {
-            // DICA DE TESTE: Se não for quarta ou sexta, mas você quiser testar, 
-            // descomente a linha abaixo temporariamente para simular que hoje é quarta do GP:
-            // gradeDoDia = finaisDeAulaQuartaGP; 
+            gradeDoDia = finaisDeAulaSextaObjetivo;
         }
 
         if (relogioMonitoramento) clearInterval(relogioMonitoramento);
 
         relogioMonitoramento = setInterval(() => {
             const agora = new Date();
-            const previsao = new Date(agora.getTime() + 60000); // 1 minuto no futuro
+            const previsao = new Date(agora.getTime() + 60000); 
             
             const horaFutura = String(previsao.getHours()).padStart(2, '0');
             const minutoFuturo = String(previsao.getMinutes()).padStart(2, '0');
             const horarioAlvo = `${horaFutura}:${minutoFuturo}`;
 
-            // Se o horário bater com a grade ou se for acionado um teste manual
             if (gradeDoDia.includes(horarioAlvo) && ultimoAlertaNotificado !== horarioAlvo) {
                 if (Notification.permission === "granted") {
-                    new Notification("⏰ Atenção, Professor!", {
-                        body: `Falta 1 minuto para o fim da aula/intervalo das ${horarioAlvo}.`,
-                        icon: "icon-192.png", 
-                        vibrate: [1000, 500, 1000, 500, 1000]
-                    });
+                    dispararNotificacao("⏰ Atenção, Professor!", `Falta 1 minuto para o fim da aula/intervalo das ${horarioAlvo}.`);
                 }
                 ultimoAlertaNotificado = horarioAlvo; 
             }
@@ -1207,14 +1211,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     atualizarVisualDoBotao();
                     iniciarMonitoramentoInteligente();
                     
-                    // TESTE IMEDIATO AO ATIVAR: Dispara uma notificação de teste para provar que funciona!
-                    new Notification("🔔 Teste de Alarme Ativado!", {
-                        body: "As notificações do seu sistema de presença estão funcionando perfeitamente.",
-                        icon: "icon-192.png",
-                        vibrate: [500, 250, 500]
-                    });
-
-                    alert("✅ Alarmes ATIVADOS! Uma notificação de teste foi enviada agora mesmo para confirmar.");
+                    // 3. DISPARO DE TESTE AUTOMÁTICO
+                    dispararNotificacao("🔔 Teste de Alarme Ativado!", "As notificações do seu sistema estão funcionando perfeitamente.");
+                    
+                    alert("✅ Alarmes ATIVADOS! Verifique o balão de notificação que acabou de aparecer.");
                 } else {
                     alert("Você precisa permitir as notificações no navegador para ligar os alarmes.");
                 }
@@ -1229,11 +1229,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     atualizarVisualDoBotao();
-    
     if (alarmesAtivos && Notification.permission === "granted") {
         iniciarMonitoramentoInteligente();
     }
-
 
 // --- SISTEMA DE CONSULTA DE GRADE DE AULAS (DETALHADO) ---
     document.getElementById('btn-ver-grade').addEventListener('click', () => {
